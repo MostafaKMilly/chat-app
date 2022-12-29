@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "lerna run dev",
-    "bootstrap": "lerna run bootstrap",
+    "publish": "lerna run version",
     "test": "lerna run test"
   }
 }
