@@ -1,14 +1,51 @@
 0 silly argv {
-0 silly argv   _: [ 'run' ],
+0 silly argv   _: [ 'version' ],
 0 silly argv   lernaVersion: '6.3.0',
-0 silly argv   '$0': 'node_modules\\lerna\\cli.js',
-0 silly argv   script: 'dev'
+0 silly argv   '$0': '..\\AppData\\Roaming\\npm\\node_modules\\lerna\\cli.js'
 0 silly argv }
 1 notice cli v6.3.0
 2 verbose rootPath C:\Users\mostafa\chat-app
-3 verbose run Nx target configuration was not found. Task dependencies will not be automatically included.
-4 error Error: No projects matching: client
-4 error     at projectsToRun (C:\Users\mostafa\chat-app\node_modules\nx\src\command-line\run-many.js:53:23)
-4 error     at C:\Users\mostafa\chat-app\node_modules\nx\src\command-line\run-many.js:24:26
-4 error     at Generator.next (<anonymous>)
-4 error     at fulfilled (C:\Users\mostafa\chat-app\node_modules\tslib\tslib.js:115:62)
+3 info current version 1.0.0
+4 silly isAnythingCommitted
+5 verbose isAnythingCommitted 1
+6 silly getCurrentBranch
+7 verbose currentBranch main
+8 silly remoteBranchExists
+9 silly isBehindUpstream
+10 silly isBehindUpstream main is behind origin/main by 0 commit(s) and ahead by 0
+11 silly hasTags
+12 verbose hasTags false
+13 info Assuming all packages changed
+14 verbose updated client
+15 verbose updated server
+16 verbose git-describe undefined => "5d2e23e"
+17 silly git-describe parsed => {"refCount":"1","sha":"5d2e23e","isDirty":false}
+18 info execute Skipping releases
+19 silly lifecycle No script for "preversion" in "root", continuing
+20 silly lifecycle No script for "preversion" in "client", continuing
+21 silly lifecycle No script for "preversion" in "server", continuing
+22 verbose version client has no lockfile. Skipping lockfile update.
+23 verbose version server has no lockfile. Skipping lockfile update.
+24 silly lifecycle No script for "version" in "client", continuing
+25 silly lifecycle No script for "version" in "server", continuing
+26 verbose version Updating root package-lock.json
+27 silly lifecycle No script for "version" in "root", continuing
+28 silly gitAdd [
+28 silly gitAdd   'packages/client/package.json',
+28 silly gitAdd   'packages/server/package.json',
+28 silly gitAdd   'lerna.json',
+28 silly gitAdd   'package-lock.json'
+28 silly gitAdd ]
+29 error Error: Command failed with exit code 1: git add -- packages/client/package.json packages/server/package.json lerna.json package-lock.json
+29 error warning: LF will be replaced by CRLF in lerna.json.
+29 error The file will have its original line endings in your working directory
+29 error warning: LF will be replaced by CRLF in packages/client/package.json.
+29 error The file will have its original line endings in your working directory
+29 error warning: LF will be replaced by CRLF in packages/server/package.json.
+29 error The file will have its original line endings in your working directory
+29 error The following paths are ignored by one of your .gitignore files:
+29 error package-lock.json
+29 error     at makeError (C:\Users\mostafa\chat-app\node_modules\execa\lib\error.js:60:11)
+29 error     at handlePromise (C:\Users\mostafa\chat-app\node_modules\execa\index.js:118:26)
+29 error     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+29 error     at async Promise.all (index 0)
