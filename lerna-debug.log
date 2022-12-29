@@ -1,0 +1,14 @@
+0 silly argv {
+0 silly argv   _: [ 'run' ],
+0 silly argv   lernaVersion: '6.3.0',
+0 silly argv   '$0': 'node_modules\\lerna\\cli.js',
+0 silly argv   script: 'dev'
+0 silly argv }
+1 notice cli v6.3.0
+2 verbose rootPath C:\Users\mostafa\chat-app
+3 verbose run Nx target configuration was not found. Task dependencies will not be automatically included.
+4 error Error: No projects matching: client
+4 error     at projectsToRun (C:\Users\mostafa\chat-app\node_modules\nx\src\command-line\run-many.js:53:23)
+4 error     at C:\Users\mostafa\chat-app\node_modules\nx\src\command-line\run-many.js:24:26
+4 error     at Generator.next (<anonymous>)
+4 error     at fulfilled (C:\Users\mostafa\chat-app\node_modules\tslib\tslib.js:115:62)
