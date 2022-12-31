@@ -5,6 +5,7 @@ import bodyParser from "body-parser";
 import http from "http";
 import routes from "./routes/routes";
 import { HttpException } from "./utils";
+import { Server } from "socket.io";
 
 dotenv.config();
 
@@ -20,8 +21,9 @@ app.use(routes);
 /**
  * Server Configuration
  */
-const httpsServer = http.createServer(app);
+const httpServer = http.createServer(app);
 const port = process.env.PORT;
+const socketIO = new Server(httpServer);
 
 app.get("/", (req, res) => {
   res.send("Express + TypeScript Server");
@@ -52,6 +54,6 @@ app.use(
   }
 );
 
-httpsServer.listen(port, () => {
+httpServer.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
 });
