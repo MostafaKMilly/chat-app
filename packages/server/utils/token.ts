@@ -1,7 +1,7 @@
+import { Prisma } from "@prisma/client";
 import jwt from "jsonwebtoken";
-import { User } from "../models/user.model";
 
-const generateToken = (user: Partial<User>): string =>
+const generateToken = (user: Partial<Prisma.userCreateInput>): string =>
   jwt.sign(user, process.env.JWT_SECRET || "SECRET_TOKEN", {
     expiresIn: "60d",
   });

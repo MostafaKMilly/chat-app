@@ -1,8 +1,8 @@
 import prisma from "../db";
-import { User } from "../models/user.model";
 import { HttpException } from "../utils";
 import bcrypt from "bcryptjs";
 import generateToken from "../utils/token";
+import { Prisma } from "@prisma/client";
 
 const checkUser = async (phone: string) => {
   const user = await prisma.user.findUnique({
@@ -21,8 +21,8 @@ const checkUser = async (phone: string) => {
 };
 
 export const registerUser = async (
-  requestBody: User
-): Promise<User & { token: string }> => {
+  requestBody: Prisma.userCreateInput
+): Promise<Prisma.userCreateInput & { token: string }> => {
   const phone = requestBody.phone?.trim();
   const password = requestBody.password?.trim()!;
 
@@ -47,7 +47,7 @@ export const registerUser = async (
   };
 };
 
-export const login = async (userPayload: User) => {
+export const login = async (userPayload: Prisma.userCreateInput) => {
   const phone = userPayload.phone?.trim();
   const password = userPayload.password?.trim();
 
@@ -88,7 +88,7 @@ export const getCurrentUser = async (phone: string) => {
     where: {
       phone,
     },
-  })) as User;
+  })) as Prisma.userCreateInput;
 
   return {
     ...user,
