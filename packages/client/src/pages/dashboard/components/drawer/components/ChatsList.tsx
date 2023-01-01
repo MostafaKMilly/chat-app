@@ -13,7 +13,7 @@ import { Chats } from "../types/chats.types";
 import PersonIcon from "@mui/icons-material/Person";
 
 export const ChatsList = ({ toLink }: { toLink: (chatId: number) => void }) => {
-  const { data: chats } = useAsyncValue() as { data: Chats };
+  const chats = useAsyncValue() as Chats;
   const { pathname } = useLocation();
 
   return (
@@ -46,8 +46,8 @@ export const ChatsList = ({ toLink }: { toLink: (chatId: number) => void }) => {
             </ListItemAvatar>
             <ListItemText
               sx={{ color: "common.black" }}
-              primary={chat.users[0].user.firstName}
-              secondary={chat.users[0].user.phone}
+              primary={chat.receipentFistName}
+              secondary={chat.receipentPhone}
             />
           </ListItemButton>
         </ListItem>

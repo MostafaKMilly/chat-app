@@ -1,0 +1,1 @@
+export { mapChatsResponse } from "./mapChatsResponse";

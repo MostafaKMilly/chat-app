@@ -36,6 +36,7 @@ export const router = (client: QueryClient) =>
             {
               path: "chats/:chatId",
               element: <Chat />,
+              loader: Chat.loader(client),
             },
           ],
         },

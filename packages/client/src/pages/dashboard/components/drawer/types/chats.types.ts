@@ -1,4 +1,4 @@
-export type ChatItem = {
+export type RawChatItem = {
   id: number;
   users: {
     user: {
@@ -10,4 +10,10 @@ export type ChatItem = {
   }[];
 };
 
-export type Chats = ChatItem[];
+export type RawChats = RawChatItem[];
+
+export type Chats = {
+  id: number;
+  receipentPhone: string;
+  receipentFistName: string;
+}[];

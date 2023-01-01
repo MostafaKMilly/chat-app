@@ -7,12 +7,15 @@ import { useSocket } from "../../shared/hooks/useSocket";
 import { AppBar } from "./components/appbar";
 import { ChatsContainer } from "./components/chats";
 import { AppDrawer } from "./components/drawer";
+import { RawChats, Chats } from "./components/drawer/types/chats.types";
+import { mapChatsResponse } from "./utils";
 
 const chatsQuery = {
   queryKey: ["chats"],
-  queryFn: () => API.get("/chats"),
+  queryFn: () => API.get<Chats, RawChats>("/chats", mapChatsResponse),
   cacheTime: 0,
 };
+
 const loader = (client: QueryClient) => async () => {
   const chats =
     client.getQueryData(chatsQuery.queryKey) ?? client.fetchQuery(chatsQuery);

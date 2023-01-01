@@ -1,15 +1,16 @@
 import { NextFunction, Request, Response, Router } from "express";
 import { getChats } from "../services/chats.service";
 import { auth } from "../utils";
+import { Request as ExpressJwtRequest } from "express-jwt";
 
 const router = Router();
 
 router.get(
   "/chats",
   auth.required,
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: ExpressJwtRequest, res: Response, next: NextFunction) => {
     try {
-      const chats = await getChats(req.body.userId);
+      const chats = await getChats(req.auth?.id);
       res.json(chats);
     } catch (error) {
       next(error);

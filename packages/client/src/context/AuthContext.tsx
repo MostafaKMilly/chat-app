@@ -1,6 +1,6 @@
 import React, { createContext, useState } from "react";
-import jwt_decode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import { getUserInfo } from "../shared/utils";
 
 export const AuthContext = createContext<{
   user: AuthenticatedUser | null;
@@ -26,17 +26,6 @@ export const AuthProvider = ({
       {children}
     </AuthContext.Provider>
   );
-};
-
-const getUserInfo = () => {
-  const token = localStorage.getItem("token")!;
-  let user = null;
-  try {
-    user = jwt_decode(token);
-  } catch {
-    user = null;
-  }
-  return user as null | AuthenticatedUser;
 };
 
 type AuthenticatedUser = {

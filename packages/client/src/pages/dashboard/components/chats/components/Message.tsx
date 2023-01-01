@@ -1,6 +1,9 @@
 import { Paper, Typography, Box } from "@mui/material";
+import { useAsyncValue } from "react-router-dom";
 
 export const Message = ({ content, type }: MessageProps) => {
+  const data = useAsyncValue();
+  console.log(data)
   return (
     <Box
       sx={{ textAlign: type === "sender" ? "-webkit-right" : "-webkit-left" }}
