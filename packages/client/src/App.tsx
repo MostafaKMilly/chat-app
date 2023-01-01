@@ -1,30 +1,30 @@
-import React from "react";
-import { io } from "socket.io-client";
-const socket = io("http://localhost:8000");
+import { RouterProvider } from "react-router-dom";
+import { CssBaseline, responsiveFontSizes, ThemeProvider } from "@mui/material";
+import { theme } from "./theme";
+import { ToastContainer } from "react-toastify";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import "react-toastify/dist/ReactToastify.css";
+import { router } from "./routes/routes";
 
-const App = () => {
-  const [time, setTime] = React.useState("fetching");
-  React.useEffect(() => {
-    socket.on("connect", () => console.log(socket.id));
-    socket.on("receive", (data) => {
-      console.log(data);
-    });
-    socket.on("connect_error", () => {
-      setTimeout(() => socket.connect(), 5000);
-    });
-    socket.on("time", (data) => setTime(data));
-    socket.on("disconnect", () => setTime("server disconnected"));
-  }, []);
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
+function App() {
   return (
-    <div className="App">
-      <button
-        onClick={() => {
-          socket.emit("receive", "Hola");
-        }}
-      >
-        Say Hii
-      </button>
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={responsiveFontSizes(theme)}>
+        <CssBaseline />
+        <ToastContainer limit={3} />
+        <RouterProvider router={router(queryClient)} />
+      </ThemeProvider>
+    </QueryClientProvider>
   );
-};
+}
+
 export default App;

@@ -1,0 +1,1 @@
+export { registerFormValidationSchema } from "./registerFormValidationSchema";
