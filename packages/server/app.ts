@@ -6,6 +6,12 @@ import http from "http";
 import routes from "./routes/routes";
 import { HttpException } from "./utils";
 import { Server } from "socket.io";
+import chatsHandlers from "./handlers/chatsHandlers";
+import messagesHandlers from "./handlers/messagesHandlers";
+import socketVerficationMiddleware from "./middlewares/socket.middleware";
+
+const { handleCreateChat } = chatsHandlers;
+const { receiveMessageHandler } = messagesHandlers;
 
 dotenv.config();
 
@@ -23,7 +29,21 @@ app.use(routes);
  */
 const httpServer = http.createServer(app);
 const port = process.env.PORT;
-const socketIO = new Server(httpServer);
+const socketIO = new Server(httpServer, {
+  cors: {
+    origin: "*",
+  },
+});
+
+/**
+ * Socket middlware
+ */
+socketIO.use(socketVerficationMiddleware);
+
+socketIO.on("connection", (socket) => {
+  socket.on("createChat", handleCreateChat.bind(socket));
+  socket.on("send message", receiveMessageHandler.bind(socket));
+});
 
 app.get("/", (req, res) => {
   res.send("Express + TypeScript Server");
@@ -42,9 +62,9 @@ app.use(
     if (err && err.name === "UnauthorizedError") {
       return res.status(401).json({
         status: "error",
-        error : {
+        error: {
           message: "missing authorization credentials",
-        }
+        },
       });
       // @ts-ignore
     } else if (err && err.errorCode) {

@@ -1,6 +1,7 @@
 import { Router } from "express";
-import { authController } from "../controllers";
+import controllers from "../controllers";
+const {authController, chatsController, messagesController} = controllers;
 
-const api = Router().use(authController);
+const api = Router().use(authController, chatsController, messagesController);
 
 export default Router().use("/api", api);
