@@ -26,7 +26,7 @@ const SUCCESS: PaletteColorOptions = {
 
 export const palette: PaletteOptions = {
   common: {
-    black: "222222",
+    black: "#222222",
   },
   primary: PRIMARY,
   secondary: SECONDARY,

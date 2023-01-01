@@ -26,7 +26,7 @@ export const router = (client: QueryClient) =>
       children: [
         {
           element: <Dashboard />,
-          path: "dashboard",
+          path: "",
           children: [
             {
               index: true,
