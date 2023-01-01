@@ -90,6 +90,14 @@ export const getCurrentUser = async (phone: string) => {
     },
   })) as Prisma.userCreateInput;
 
+  if (!user) {
+    throw new HttpException(404, {
+      error: {
+        message: "user not found",
+      },
+    });
+  }
+  
   return {
     ...user,
     token: generateToken(user),

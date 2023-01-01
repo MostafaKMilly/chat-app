@@ -15,12 +15,12 @@ const getTokenFromHeaders = (req: Request): string | undefined => {
 
 const auth = {
   required: jwt({
-    secret: process.env.JWT_SECRET || "superSecret",
+    secret: process.env.JWT_SECRET || "SECRET_TOKEN",
     getToken: getTokenFromHeaders,
     algorithms: ["HS256"],
   }),
   optional: jwt({
-    secret: process.env.JWT_SECRET || "superSecret",
+    secret: process.env.JWT_SECRET || "SECRET_TOKEN",
     credentialsRequired: false,
     getToken: getTokenFromHeaders,
     algorithms: ["HS256"],

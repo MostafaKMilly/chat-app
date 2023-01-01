@@ -1669,6 +1669,13 @@
   "resolved" "https://registry.npmjs.org/@types/estree/-/estree-1.0.0.tgz"
   "version" "1.0.0"
 
+"@types/express-jwt@^7.4.2":
+  "integrity" "sha512-wb3wbD/XaWdBu9366M07Ugb3fuIiW7B2oUdnXfvUchI892eLGZ5eQqgfnVw2oNfN0dF9L2Px859DpZKPDtxzlA=="
+  "resolved" "https://registry.npmjs.org/@types/express-jwt/-/express-jwt-7.4.2.tgz"
+  "version" "7.4.2"
+  dependencies:
+    "express-jwt" "*"
+
 "@types/express-serve-static-core@^4.17.31":
   "integrity" "sha512-DxMhY+NAsTwMMFHBTtJFNp5qiHKJ7TeqOo23zVEM9alT1Ml27Q3xcTH0xwxn7Q0BbMcVEJOs/7aQtUWupUQN3Q=="
   "resolved" "https://registry.npmjs.org/@types/express-serve-static-core/-/express-serve-static-core-4.17.31.tgz"
@@ -2977,7 +2984,7 @@
     "signal-exit" "^3.0.3"
     "strip-final-newline" "^2.0.0"
 
-"express-jwt@^8.2.1":
+"express-jwt@*", "express-jwt@^8.2.1":
   "integrity" "sha512-h4tbjjQ4LlgQ4ODF9ZBAzUSbclBhu0buEx3+3T0CT4KulO3pj0CxO+/GGqtINqnM8uZqU04RvDdMOkV5/UfXnA=="
   "resolved" "https://registry.npmjs.org/express-jwt/-/express-jwt-8.2.1.tgz"
   "version" "8.2.1"
@@ -4051,17 +4058,7 @@
   dependencies:
     "yallist" "^4.0.0"
 
-"lru-cache@^7.4.4":
-  "integrity" "sha512-ysxwsnTKdAx96aTRdhDOCQfDgbHnt8SK0KY8SEjO0wHinhWOFTESbjVCMPbU1uGXg/ch4lifqx0wfjOawU2+WA=="
-  "resolved" "https://registry.npmjs.org/lru-cache/-/lru-cache-7.14.1.tgz"
-  "version" "7.14.1"
-
-"lru-cache@^7.5.1":
-  "integrity" "sha512-ysxwsnTKdAx96aTRdhDOCQfDgbHnt8SK0KY8SEjO0wHinhWOFTESbjVCMPbU1uGXg/ch4lifqx0wfjOawU2+WA=="
-  "resolved" "https://registry.npmjs.org/lru-cache/-/lru-cache-7.14.1.tgz"
-  "version" "7.14.1"
-
-"lru-cache@^7.7.1":
+"lru-cache@^7.4.4", "lru-cache@^7.5.1", "lru-cache@^7.7.1":
   "integrity" "sha512-ysxwsnTKdAx96aTRdhDOCQfDgbHnt8SK0KY8SEjO0wHinhWOFTESbjVCMPbU1uGXg/ch4lifqx0wfjOawU2+WA=="
   "resolved" "https://registry.npmjs.org/lru-cache/-/lru-cache-7.14.1.tgz"
   "version" "7.14.1"
@@ -5460,7 +5457,6 @@
     "cors" "^2.8.5"
     "dotenv" "^16.0.3"
     "express" "^4.18.2"
-    "express-jwt" "^8.2.1"
     "express-validator" "^6.14.2"
     "jsonwebtoken" "^9.0.0"
     "lodash" "^4.17.21"
@@ -5748,11 +5744,11 @@
     "has-flag" "^3.0.0"
 
 "supports-color@^5.5.0":
-  "integrity" "sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw=="
-  "resolved" "https://registry.npmjs.org/supports-color/-/supports-color-7.2.0.tgz"
-  "version" "7.2.0"
+  "integrity" "sha512-QjVjwdXIt408MIiAqCX4oUKsgU2EqAGzs2Ppkm4aQYbjm+ZEWEcW4SfFNTr4uMNZma0ey4f5lgLrkB0aX0QMow=="
+  "resolved" "https://registry.npmjs.org/supports-color/-/supports-color-5.5.0.tgz"
+  "version" "5.5.0"
   dependencies:
-    "has-flag" "^4.0.0"
+    "has-flag" "^3.0.0"
 
 "supports-color@^7.1.0":
   "integrity" "sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw=="

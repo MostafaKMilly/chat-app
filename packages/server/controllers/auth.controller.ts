@@ -24,14 +24,13 @@ router.post(
       const user = await registerUser(req.body.user);
       res.json({ user });
     } catch (error) {
-      
       next(error);
     }
   }
 );
 
 router.get(
-  "/user",
+  "/auth/user",
   auth.required,
   async (req: ExpressJwtRequest, res: Response, next: NextFunction) => {
     try {
