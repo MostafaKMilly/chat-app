@@ -15,6 +15,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useUserChats } from "./hooks";
 import { TextField } from "@mui/material";
 import { ListItemAvatar } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 
 export const AppDrawer = ({ open, toggleDrawer }: AppDrawerProps) => {
   const matches = useMediaQuery<Theme>((theme) => theme.breakpoints.up("sm"));
@@ -55,7 +56,13 @@ export const AppDrawer = ({ open, toggleDrawer }: AppDrawerProps) => {
         >
           <CloseIcon />
         </IconButton>
-        <TextField type="search" placeholder="Search for number ..." />
+        <TextField
+          type="search"
+          placeholder="Search for number ..."
+          InputProps={{
+            startAdornment: <SearchIcon sx={{ mr: 1, color: "grey.400" }} />,
+          }}
+        />
       </DrawerHeader>
       <List
         sx={{

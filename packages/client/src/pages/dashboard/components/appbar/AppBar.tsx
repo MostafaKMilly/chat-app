@@ -20,6 +20,7 @@ export const AppBar = ({ toggleDrawer, drawer }: TProps) => {
       elevation={0}
       sx={{
         width: "100%",
+        py: 1,
         ...(matches && {
           ml: "0px",
           ...(drawer && {

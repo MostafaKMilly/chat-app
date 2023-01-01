@@ -1,4 +1,4 @@
-import { ThemeOptions, createTheme } from "@mui/material";
+import { createTheme } from "@mui/material";
 import { componentsOverrides } from "./overrides";
 import { palette } from "./pallete";
 import { shadows } from "./shadows";

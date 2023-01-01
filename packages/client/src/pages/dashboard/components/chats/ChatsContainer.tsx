@@ -5,6 +5,10 @@ export const ChatsContainer = styled(Container, {
 })<ChatsContainerProps>(({ theme, open, state }) =>
   theme.unstable_sx({
     opacity: state === "loading" ? 0.5 : 1,
+    position: "relative",
+    width: "100%",
+    height: "97vh",
+    overflow: "hidden",
     mt: 1,
     px: 5,
     flexGrow: 1,

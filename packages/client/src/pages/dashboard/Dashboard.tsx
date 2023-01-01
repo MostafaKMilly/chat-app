@@ -17,7 +17,7 @@ export const Dashboard = () => {
     <Box display="flex">
       <AppBar toggleDrawer={toggleDrawer} drawer={drawer} />
       <AppDrawer open={drawer} toggleDrawer={toggleDrawer} />
-      <ChatsContainer open={drawer} state={state}>
+      <ChatsContainer open={drawer} state={state} maxWidth={false}>
         <Toolbar />
         <Outlet />
       </ChatsContainer>
