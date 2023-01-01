@@ -8,6 +8,8 @@ export const router = (client: QueryClient) =>
     {
       element: <Login />,
       path: "/login",
+      action: Login.action,
+      loader: Login.loader,
     },
     {
       element: <Register />,

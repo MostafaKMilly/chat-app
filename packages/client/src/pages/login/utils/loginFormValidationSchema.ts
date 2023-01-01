@@ -1,8 +1,11 @@
 import * as Yup from "yup";
 
+const phoneRegExp =
+  /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+
 export const loginFormValidationSchema = Yup.object({
   phone: Yup.string()
-    .max(20, "Phone must be 20 characters or less")
+    .matches(phoneRegExp, "Phone number is not valid")
     .required("Phone is required"),
   password: Yup.string()
     .required("Please enter a password")

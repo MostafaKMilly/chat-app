@@ -14,7 +14,7 @@ export const LoginForm = () => {
 
   return (
     <Box p={2}>
-      <Form method="post">
+      <Form method="post" action="/login">
         <Stack spacing={3}>
           <TextField
             id="phone"
@@ -36,7 +36,6 @@ export const LoginForm = () => {
             <LoadingButton
               variant="contained"
               type="submit"
-              form="loginForm"
               loading={state === "submitting"}
               loadingIndicator="Saving..."
               disabled={(!dirty || !isValid) && !_.isEmpty(touched)}

@@ -13,8 +13,8 @@ const checkUser = async (phone: string) => {
 
   if (user) {
     throw new HttpException(422, {
-      errors: {
-        ...(user ? { phone: "has already been taken" } : {}),
+      error: {
+        ...(user ? { message: "has already been taken" } : {}),
       },
     });
   }
@@ -28,8 +28,8 @@ export const registerUser = async (
 
   if (!phone) {
     throw new HttpException(422, {
-      errors: {
-        phone: ["can't be empty"],
+      error: {
+        message: "can't be empty",
       },
     });
   }
@@ -52,11 +52,11 @@ export const login = async (userPayload: Prisma.userCreateInput) => {
   const password = userPayload.password?.trim();
 
   if (!phone) {
-    throw new HttpException(422, { errors: { phone: ["can't be blank"] } });
+    throw new HttpException(422, { error: { message: "can't be blank" } });
   }
 
   if (!password) {
-    throw new HttpException(422, { errors: { password: ["can't be blank"] } });
+    throw new HttpException(422, { error: { message: "can't be blank" } });
   }
 
   const user = await prisma.user.findUnique({
@@ -77,8 +77,8 @@ export const login = async (userPayload: Prisma.userCreateInput) => {
   }
 
   throw new HttpException(403, {
-    errors: {
-      "phone or password": ["is invalid"],
+    error: {
+      message: "phone or password is invalid",
     },
   });
 };

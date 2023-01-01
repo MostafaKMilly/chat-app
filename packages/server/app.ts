@@ -42,7 +42,9 @@ app.use(
     if (err && err.name === "UnauthorizedError") {
       return res.status(401).json({
         status: "error",
-        message: "missing authorization credentials",
+        error : {
+          message: "missing authorization credentials",
+        }
       });
       // @ts-ignore
     } else if (err && err.errorCode) {
