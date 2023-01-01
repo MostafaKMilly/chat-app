@@ -52,7 +52,6 @@ export const RegisterForm = () => {
             <LoadingButton
               variant="contained"
               type="submit"
-              form="loginForm"
               loading={state === "submitting"}
               loadingIndicator="Saving..."
               disabled={(!dirty || !isValid) && !_.isEmpty(touched)}

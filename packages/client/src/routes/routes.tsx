@@ -14,6 +14,8 @@ export const router = (client: QueryClient) =>
     {
       element: <Register />,
       path: "/register",
+      action: Register.action,
+      loader: Register.loader,
     },
     /* 
   {
