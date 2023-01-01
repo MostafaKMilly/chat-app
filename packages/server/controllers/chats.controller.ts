@@ -1,10 +1,12 @@
 import { NextFunction, Request, Response, Router } from "express";
 import { getChats } from "../services/chats.service";
+import { auth } from "../utils";
 
 const router = Router();
 
-router.post(
+router.get(
   "/chats",
+  auth.required,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const chats = await getChats(req.body.userId);

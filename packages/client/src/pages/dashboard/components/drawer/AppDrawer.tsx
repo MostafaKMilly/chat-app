@@ -1,30 +1,26 @@
+import { Suspense } from "react";
 import {
   Drawer,
   IconButton,
   styled,
   Theme,
   useMediaQuery,
-  ListItem,
-  ListItemButton as MUIListItemButton,
-  ListItemText,
-  Avatar,
-  List,
+  Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useUserChats } from "./hooks";
+import { Await, useLoaderData, useNavigate } from "react-router-dom";
 import { TextField } from "@mui/material";
-import { ListItemAvatar } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import { LoadingSpinner } from "../../../../shared/components";
+import { ChatsList } from "./components";
 
 export const AppDrawer = ({ open, toggleDrawer }: AppDrawerProps) => {
+  const data = useLoaderData() as Record<string, any>;
   const matches = useMediaQuery<Theme>((theme) => theme.breakpoints.up("sm"));
   const navigate = useNavigate();
-  const { pathname } = useLocation();
-  const chats = useUserChats();
 
-  const toLink = (link: string) => {
-    navigate(link);
+  const toLink = (chatId: number) => {
+    navigate(`/chats/${chatId}`);
     if (!matches) {
       toggleDrawer?.();
     }
@@ -64,42 +60,14 @@ export const AppDrawer = ({ open, toggleDrawer }: AppDrawerProps) => {
           }}
         />
       </DrawerHeader>
-      <List
-        sx={{
-          px: 2,
-          rowGap: 2,
-          display: "flex",
-          flexDirection: "column",
-          mt: 1,
-          height: "100%",
-        }}
-      >
-        {chats.map((chat) => (
-          <ListItem key={chat.link} disablePadding>
-            <ListItemButton
-              disableRipple
-              onClick={() => toLink(chat.link)}
-              active={pathname === chat.link}
-            >
-              <ListItemAvatar>
-                <Avatar
-                  sx={{
-                    backgroundColor: "secondary.light",
-                    color: "common.black",
-                  }}
-                >
-                  {chat.avatar}
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText
-                sx={{ color: "common.black" }}
-                primary={chat.primaryText}
-                secondary={chat.secondaryText}
-              />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
+      <Suspense fallback={<LoadingSpinner />}>
+        <Await
+          resolve={data?.chats}
+          errorElement={<Typography>Error on loading chats</Typography>}
+        >
+          <ChatsList toLink={toLink} />
+        </Await>
+      </Suspense>
     </Drawer>
   );
 };
@@ -111,14 +79,6 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   ...theme.mixins.toolbar,
   justifyContent: "space-between",
   borderBottom: `1px solid ${theme.palette.secondary.main}`,
-}));
-
-const ListItemButton = styled(MUIListItemButton, {
-  shouldForwardProp: (prop) => prop !== "active",
-})<{ active: boolean }>(({ active, theme }) => ({
-  "&:hover": {
-    backgroundColor: active ? theme.palette.secondary.light : "transparent",
-  },
 }));
 
 type AppDrawerProps = {
