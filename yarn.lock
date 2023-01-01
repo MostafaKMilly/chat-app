@@ -2286,7 +2286,7 @@
 
 "client@file:C:\\Users\\mostafa\\chat-app\\packages\\client":
   "resolved" "file:packages/client"
-  "version" "1.0.5"
+  "version" "1.0.8"
   dependencies:
     "@emotion/react" "^11.10.5"
     "@emotion/styled" "^11.10.5"
@@ -3919,6 +3919,11 @@
     "jwa" "^1.4.1"
     "safe-buffer" "^5.0.1"
 
+"jwt-decode@^3.1.2":
+  "integrity" "sha512-UfpWE/VZn0iP50d8cz9NrZLM9lSWhcJ+0Gt/nm4by88UL+J1SiKN8/5dkjMmbEzwL2CAe+67GsegCbIKtbp75A=="
+  "resolved" "https://registry.npmjs.org/jwt-decode/-/jwt-decode-3.1.2.tgz"
+  "version" "3.1.2"
+
 "kind-of@^6.0.2", "kind-of@^6.0.3":
   "integrity" "sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw=="
   "resolved" "https://registry.npmjs.org/kind-of/-/kind-of-6.0.3.tgz"
@@ -5449,7 +5454,7 @@
 
 "server@file:C:\\Users\\mostafa\\chat-app\\packages\\server":
   "resolved" "file:packages/server"
-  "version" "1.0.5"
+  "version" "1.0.6"
   dependencies:
     "@prisma/client" "^4.8.0"
     "bcryptjs" "^2.4.3"
