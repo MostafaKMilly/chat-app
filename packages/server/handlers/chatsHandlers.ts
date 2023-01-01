@@ -11,7 +11,7 @@ async function handleCreateChat(payload: { recipientId: number }) {
     any
     // @ts-ignore
   > = this;
-  const userId = Number(socket.handshake.query.userId as string);
+  const userId = Number(socket.handshake.auth.userId as string);
 
   const newChat = await prisma.chat.create({
     data: {

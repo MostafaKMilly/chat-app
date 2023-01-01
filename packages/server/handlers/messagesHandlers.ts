@@ -13,7 +13,7 @@ async function receiveMessageHandler(
     // @ts-ignore
   > = this
 ) {
-  const userId = Number(socket.handshake.query.userId as string);
+  const userId = Number(socket.handshake.auth.userId as string);
   const newMessage = await prisma.message.create({
     data: {
       userId: userId,

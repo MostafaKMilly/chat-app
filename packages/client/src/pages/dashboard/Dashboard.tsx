@@ -1,6 +1,7 @@
 import { Box, Toolbar } from "@mui/material";
 import { useState } from "react";
 import { Outlet, useNavigation } from "react-router-dom";
+import { useSocket } from "../../shared/hooks/useSocket";
 import { AppBar } from "./components/appbar";
 import { ChatsContainer } from "./components/chats";
 import { AppDrawer } from "./components/drawer";
@@ -8,7 +9,8 @@ import { AppDrawer } from "./components/drawer";
 export const Dashboard = () => {
   const { state } = useNavigation();
   const [drawer, setDrawer] = useState(false);
-
+  const { socket } = useSocket();
+  
   const toggleDrawer = () => {
     setDrawer(!drawer);
   };

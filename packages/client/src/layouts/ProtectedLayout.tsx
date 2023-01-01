@@ -1,6 +1,7 @@
 import { QueryClient } from "@tanstack/react-query";
 import { Outlet, redirect } from "react-router-dom";
 import API from "../api/httpClient";
+import { AuthProvider } from "../context";
 
 const userInfoQuery = {
   queryKey: ["UserInfo"],
@@ -24,9 +25,9 @@ const loader = (client: QueryClient) => async () => {
 
 export const ProtectedLayout = () => {
   return (
-    <>
+    <AuthProvider>
       <Outlet />
-    </>
+    </AuthProvider>
   );
 };
 

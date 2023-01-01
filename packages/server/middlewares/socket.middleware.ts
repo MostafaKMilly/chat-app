@@ -7,7 +7,7 @@ export const socketVerficationMiddleware = async (
   socket: Socket<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>,
   next: (err?: ExtendedError) => void
 ) => {
-  const userId = Number(socket.handshake.query.userId);
+  const userId = Number(socket.handshake.auth.userId);
   if (userId) {
     const user = await prisma.user.findMany({
       where: {

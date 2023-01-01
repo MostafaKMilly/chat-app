@@ -6,9 +6,10 @@ import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import LogoutIcon from "@mui/icons-material/Logout";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import { useAuthenticatedUser } from "../../../../../shared/hooks";
 
 export const AppBarMenu = () => {
-  const navigate = useNavigate();
+  const { handleSignout } = useAuthenticatedUser();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
@@ -17,12 +18,6 @@ export const AppBarMenu = () => {
   };
   const handleClose = () => {
     setAnchorEl(null);
-  };
-
-  const handleLogout = () => {
-    localStorage.clear();
-    handleClose();
-    navigate("/login");
   };
 
   return (
@@ -40,7 +35,7 @@ export const AppBarMenu = () => {
         )}
       </IconButton>
       <Menu anchorEl={anchorEl} open={open} onClose={handleClose} elevation={1}>
-        <MenuItem onClick={handleLogout}>
+        <MenuItem onClick={handleSignout}>
           <ListItemIcon>
             <LogoutIcon fontSize="small" sx={{ color: "common.black" }} />
           </ListItemIcon>
