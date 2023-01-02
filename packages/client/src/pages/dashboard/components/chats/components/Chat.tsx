@@ -2,7 +2,6 @@ import { Box, InputBase, Button } from "@mui/material";
 import { Message } from "./Message";
 import EditIcon from "@mui/icons-material/Edit";
 import {
-  Await,
   defer,
   LoaderFunctionArgs,
   useLoaderData,
@@ -13,10 +12,13 @@ import { QueryClient } from "@tanstack/react-query";
 import API from "../../../../../api/httpClient";
 import { Suspense, useEffect, useState, useRef } from "react";
 import { LoadingSpinner } from "../../../../../shared/components";
-import { MessageItem, Messages } from "../types/messages.types";
+import { Messages } from "../types/messages.types";
 import { useAuthenticatedUser } from "../../../../../shared/hooks";
 import { useSocket } from "../../../../../shared/hooks/useSocket";
 import classes from "./styles.module.css";
+
+import { getMac } from "../../../utils/encryption/mac";
+import { receiveMessageHandler } from "./handlers";
 
 const getMessagesQuery = (chatId: number) => ({
   queryKey: ["messages", chatId],
@@ -69,18 +71,22 @@ export const Chat = () => {
     }
   }, [allMessages]);
 
-  socket.on("messagesList", (socketData: MessageItem) => {
-    setAllMessages([...allMessages, socketData]);
+  socket.on("messagesList", (socketData) => {
+    const newMessage = receiveMessageHandler(socketData);
+    if (newMessage) setAllMessages([...allMessages, newMessage]);
   });
 
   const handleSendMessage = (
     event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     if (event.key === "Enter") {
-      socket.emit("send message", {
+      const newMessage = {
         chatId: Number(chatId),
         message: event.currentTarget.value,
-      });
+      };
+      const mac = getMac(JSON.stringify(newMessage), "my-key");
+
+      socket.emit("send message", mac);
       event.currentTarget.value = "";
     }
   };

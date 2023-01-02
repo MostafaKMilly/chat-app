@@ -1657,6 +1657,11 @@
   dependencies:
     "@types/node" "*"
 
+"@types/crypto-js@^4.1.1":
+  "integrity" "sha512-BG7fQKZ689HIoc5h+6D2Dgq1fABRa0RbBWKBd9SP/MVRVXROflpm5fhwyATX5duFmbStzyzyycPB8qUYKDH3NA=="
+  "resolved" "https://registry.npmjs.org/@types/crypto-js/-/crypto-js-4.1.1.tgz"
+  "version" "4.1.1"
+
 "@types/dotenv@^8.2.0":
   "integrity" "sha512-ylSC9GhfRH7m1EUXBXofhgx4lUWmFeQDINW5oLuS+gxWdfUeW4zJdeVTYVkexEW+e2VUvlZR2kGnGGipAWR7kw=="
   "resolved" "https://registry.npmjs.org/@types/dotenv/-/dotenv-8.2.0.tgz"
@@ -1751,6 +1756,13 @@
   "integrity" "sha512-FGa1F62FT09qcrueBA6qYTrJPVDzah9a+493+o2PCXsesWHIn27G98TsSMs3WPNbZIEj4+VJf6saSFpvD+3Zsw=="
   "resolved" "https://registry.npmjs.org/@types/qs/-/qs-6.9.7.tgz"
   "version" "6.9.7"
+
+"@types/randombytes@^2.0.0":
+  "integrity" "sha512-bz8PhAVlwN72vqefzxa14DKNT8jK/mV66CSjwdVQM/k3Th3EPKfUtdMniwZgMedQTFuywAsfjnZsg+pEnltaMA=="
+  "resolved" "https://registry.npmjs.org/@types/randombytes/-/randombytes-2.0.0.tgz"
+  "version" "2.0.0"
+  dependencies:
+    "@types/node" "*"
 
 "@types/range-parser@*":
   "integrity" "sha512-EEhsLsD6UsDM1yFhAvy0Cjr6VwmpMWqFBCb9w07wVugF7w9nfajxLuVmngTIpgS6svCnm6Vaw+MZhoDCKnOfsw=="
@@ -2237,6 +2249,11 @@
   "resolved" "https://registry.npmjs.org/chardet/-/chardet-0.7.0.tgz"
   "version" "0.7.0"
 
+"charenc@0.0.2":
+  "integrity" "sha512-yrLQ/yVUFXkzg7EDQsPieE/53+0RlaWTs+wBrvW36cyilJ2SaDWfl4Yj7MtLTXleV9uEKefbAGUPv2/iWSooRA=="
+  "resolved" "https://registry.npmjs.org/charenc/-/charenc-0.0.2.tgz"
+  "version" "0.0.2"
+
 "chokidar@^3.5.1", "chokidar@^3.5.2":
   "integrity" "sha512-Dr3sfKRP6oTcjf2JmUmFJfeVMvXBdegxB0iVQ5eb2V10uFJUCAS8OByZdVAyVb8xXNz3GjjTgj9kLWsZTqE6kw=="
   "resolved" "https://registry.npmjs.org/chokidar/-/chokidar-3.5.3.tgz"
@@ -2295,6 +2312,7 @@
     "@mui/material" "^5.11.2"
     "@tanstack/react-query" "^4.20.4"
     "axios" "^1.2.2"
+    "crypto" "^1.0.1"
     "formik" "^2.2.9"
     "jwt-decode" "^3.1.2"
     "lodash" "^4.17.21"
@@ -2595,6 +2613,21 @@
     "path-key" "^3.1.0"
     "shebang-command" "^2.0.0"
     "which" "^2.0.1"
+
+"crypt@0.0.2":
+  "integrity" "sha512-mCxBlsHFYh9C+HVpiEacem8FEBnMXgU9gy4zmNC+SXAZNB/1idgp/aulFJ4FgCi7GPEVbfyng092GqL2k2rmow=="
+  "resolved" "https://registry.npmjs.org/crypt/-/crypt-0.0.2.tgz"
+  "version" "0.0.2"
+
+"crypto-js@^4.1.1":
+  "integrity" "sha512-o2JlM7ydqd3Qk9CA0L4NL6mTzU2sdx96a+oOfPu8Mkl/PK51vSyoi8/rQ8NknZtk44vq15lmhAj9CIAGwgeWKw=="
+  "resolved" "https://registry.npmjs.org/crypto-js/-/crypto-js-4.1.1.tgz"
+  "version" "4.1.1"
+
+"crypto@^1.0.1":
+  "integrity" "sha512-VxBKmeNcqQdiUQUW2Tzq0t377b54N2bMtXO/qiLa+6eRRmmC4qT3D4OnTGoT/U6O9aklQ/jTwbOtRMTTY8G0Ig=="
+  "resolved" "https://registry.npmjs.org/crypto/-/crypto-1.0.1.tgz"
+  "version" "1.0.1"
 
 "csstype@^3.0.2", "csstype@^3.1.1":
   "integrity" "sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw=="
@@ -3660,6 +3693,11 @@
   dependencies:
     "binary-extensions" "^2.0.0"
 
+"is-buffer@~1.1.6":
+  "integrity" "sha512-NcdALwpXkTm5Zvvbk7owOUSvVvBKDgKP5/ewfXEznmQFfs4ZRmanOeKBTjRVjka3QFoN6XJ+9F3USqfHqTaU5w=="
+  "resolved" "https://registry.npmjs.org/is-buffer/-/is-buffer-1.1.6.tgz"
+  "version" "1.1.6"
+
 "is-ci@^2.0.0":
   "integrity" "sha512-YfJT7rkpQB0updsdHLGWrvhBJfcfzNNawYDNIyQXJz0IViGf75O8EBPKSdvw2rF+LGCsX4FZ8tcr3b19LcZq4w=="
   "resolved" "https://registry.npmjs.org/is-ci/-/is-ci-2.0.0.tgz"
@@ -4123,6 +4161,15 @@
   "resolved" "https://registry.npmjs.org/map-obj/-/map-obj-4.3.0.tgz"
   "version" "4.3.0"
 
+"md5@^2.2.1":
+  "integrity" "sha512-T1GITYmFaKuO91vxyoQMFETst+O71VUPEU3ze5GNzDm0OWdP8v1ziTaAEPUr/3kLsY3Sftgz242A1SetQiDL7g=="
+  "resolved" "https://registry.npmjs.org/md5/-/md5-2.3.0.tgz"
+  "version" "2.3.0"
+  dependencies:
+    "charenc" "0.0.2"
+    "crypt" "0.0.2"
+    "is-buffer" "~1.1.6"
+
 "media-typer@0.3.0":
   "integrity" "sha512-dq+qelQ9akHpcOl/gUVRTxVIOkAJ1wR3QAvb4RsVjS8oVoFjDGTc679wJYmUmknUF5HwMLOgb5O+a3KxfWapPQ=="
   "resolved" "https://registry.npmjs.org/media-typer/-/media-typer-0.3.0.tgz"
@@ -4406,6 +4453,13 @@
     "semver" "^7.3.5"
     "tar" "^6.1.2"
     "which" "^2.0.2"
+
+"node-mac-crypt@^1.0.0":
+  "integrity" "sha512-9bBiFMwrkQ/bhAzaqwmsW5hDxqmNpV7n2pDmKKePF3Vwu+RQJwxR3SwoziAQjDeZYLTmaP49EQlnTGbujzMOkQ=="
+  "resolved" "https://registry.npmjs.org/node-mac-crypt/-/node-mac-crypt-1.0.0.tgz"
+  "version" "1.0.0"
+  dependencies:
+    "md5" "^2.2.1"
 
 "node-releases@^2.0.6":
   "integrity" "sha512-dFSmB8fFHEH/s81Xi+Y/15DQY6VHW81nXRj86EMSL3lmuTmK1e+aT4wrFCkTbm+gSwkw4KpX+rT/pMM2c1mF+A=="
@@ -5071,6 +5125,13 @@
   "resolved" "https://registry.npmjs.org/quick-lru/-/quick-lru-4.0.1.tgz"
   "version" "4.0.1"
 
+"randombytes@^2.1.0":
+  "integrity" "sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ=="
+  "resolved" "https://registry.npmjs.org/randombytes/-/randombytes-2.1.0.tgz"
+  "version" "2.1.0"
+  dependencies:
+    "safe-buffer" "^5.1.0"
+
 "range-parser@~1.2.1":
   "integrity" "sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg=="
   "resolved" "https://registry.npmjs.org/range-parser/-/range-parser-1.2.1.tgz"
@@ -5358,7 +5419,7 @@
   dependencies:
     "tslib" "^2.1.0"
 
-"safe-buffer@^5.0.1", "safe-buffer@~5.2.0", "safe-buffer@5.2.1":
+"safe-buffer@^5.0.1", "safe-buffer@^5.1.0", "safe-buffer@~5.2.0", "safe-buffer@5.2.1":
   "integrity" "sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ=="
   "resolved" "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.2.1.tgz"
   "version" "5.2.1"
