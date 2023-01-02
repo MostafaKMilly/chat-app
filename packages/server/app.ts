@@ -9,6 +9,7 @@ import { Server } from "socket.io";
 import chatsHandlers from "./handlers/chatsHandlers";
 import messagesHandlers from "./handlers/messagesHandlers";
 import socketVerficationMiddleware from "./middlewares/socket.middleware";
+import prisma from "./db";
 
 const { handleCreateChat } = chatsHandlers;
 const { receiveMessageHandler } = messagesHandlers;
@@ -41,8 +42,13 @@ const socketIO = new Server(httpServer, {
 socketIO.use(socketVerficationMiddleware);
 
 socketIO.on("connection", (socket) => {
+  if (socket.handshake.auth.chatId)
+    socket.join(socket.handshake.auth.chatId as string);
   socket.on("createChat", handleCreateChat.bind(socket));
-  socket.on("send message", receiveMessageHandler.bind(socket));
+  socket.on(
+    "send message",
+    receiveMessageHandler.bind({ socket, io: socketIO })
+  );
 });
 
 app.get("/", (req, res) => {

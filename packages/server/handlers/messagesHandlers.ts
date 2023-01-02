@@ -3,16 +3,12 @@ import { Socket } from "socket.io";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import prisma from "../db";
 
-async function receiveMessageHandler(
-  payload: { chatId: number; message: string },
-  socket: Socket<
-    DefaultEventsMap,
-    DefaultEventsMap,
-    DefaultEventsMap,
-    any
-    // @ts-ignore
-  > = this
-) {
+async function receiveMessageHandler(payload: {
+  chatId: number;
+  message: string;
+}) {
+  // @ts-ignore
+  const { socket, io } = this;
   const userId = Number(socket.handshake.auth.userId as string);
   const newMessage = await prisma.message.create({
     data: {
@@ -21,7 +17,7 @@ async function receiveMessageHandler(
       content: payload.message,
     },
   });
-  socket.emit("messagesList", newMessage);
+  io.in(payload.chatId.toString()).emit("messagesList", newMessage);
 }
 
 export default {

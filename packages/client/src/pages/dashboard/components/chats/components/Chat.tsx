@@ -1,4 +1,4 @@
-import { Box, InputBase, Button, Typography } from "@mui/material";
+import { Box, InputBase, Button } from "@mui/material";
 import { Message } from "./Message";
 import EditIcon from "@mui/icons-material/Edit";
 import {
@@ -7,17 +7,20 @@ import {
   LoaderFunctionArgs,
   useLoaderData,
   useNavigate,
+  useParams,
 } from "react-router-dom";
 import { QueryClient } from "@tanstack/react-query";
 import API from "../../../../../api/httpClient";
-import { Suspense } from "react";
+import { Suspense, useEffect, useState, useRef } from "react";
 import { LoadingSpinner } from "../../../../../shared/components";
-import { Messages } from "../types/messages.types";
+import { MessageItem, Messages } from "../types/messages.types";
 import { useAuthenticatedUser } from "../../../../../shared/hooks";
+import { useSocket } from "../../../../../shared/hooks/useSocket";
+import classes from "./styles.module.css";
 
 const getMessagesQuery = (chatId: number) => ({
   queryKey: ["messages", chatId],
-  queryFn: () => API.get("/messages", undefined, { data: { chatId } }),
+  queryFn: () => API.post("/messages", { chatId }),
 });
 
 const loader =
@@ -32,12 +35,54 @@ const loader =
   };
 
 export const Chat = () => {
+  const { chatId } = useParams();
   const data = useLoaderData() as Record<string, any>;
+  const chatBoxRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const { user } = useAuthenticatedUser();
+  const { socket } = useSocket(chatId);
+  const [allMessages, setAllMessages] = useState<Messages>([]);
+  const [failed, setFailed] = useState<boolean>(false);
+
+  useEffect(() => {
+    data?.messages?.data
+      ? setAllMessages(data?.messages?.data)
+      : data.messages
+          ?.then((response: { data: Messages }) => {
+            setAllMessages(response.data);
+          })
+          ?.catch(() => {
+            setFailed(true);
+          });
+  }, [data]);
 
   const handleLeaveChat = () => {
     navigate("/");
+  };
+
+  useEffect(() => {
+    if (chatBoxRef?.current) {
+      const scrollHeight = chatBoxRef.current.scrollHeight;
+      const height = chatBoxRef.current.clientHeight;
+      const maxScrollTop = scrollHeight - height;
+      chatBoxRef.current.scrollTop = maxScrollTop > 0 ? maxScrollTop : 0;
+    }
+  }, [allMessages]);
+
+  socket.on("messagesList", (socketData: MessageItem) => {
+    setAllMessages([...allMessages, socketData]);
+  });
+
+  const handleSendMessage = (
+    event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    if (event.key === "Enter") {
+      socket.emit("send message", {
+        chatId: Number(chatId),
+        message: event.currentTarget.value,
+      });
+      event.currentTarget.value = "";
+    }
   };
 
   return (
@@ -51,24 +96,21 @@ export const Chat = () => {
         overflow="scroll"
         px={4}
         py={1}
+        ref={chatBoxRef}
+        className={classes.chatBox}
       >
         <Suspense fallback={<LoadingSpinner />}>
-          <Await
-            resolve={data.messages}
-            errorElement={<Typography>Can not load messages</Typography>}
-          >
-            {({ data: messages }: { data: Messages }) => (
-              <>
-                {messages.map((message) => (
+          <>
+            {failed
+              ? "Failed"
+              : allMessages.map((message) => (
                   <Message
                     key={message.id}
                     content={message.content}
-                    type={user?.id === message.userId ? "sender" : "recipient"}
+                    type={user?.id === message.userId ? "recipient" : "sender"}
                   />
                 ))}
-              </>
-            )}
-          </Await>
+          </>
         </Suspense>
       </Box>
       <Box
@@ -86,6 +128,7 @@ export const Chat = () => {
           placeholder="Type a message"
           fullWidth
           startAdornment={<EditIcon sx={{ color: "lightgray", mr: 1 }} />}
+          onKeyDown={handleSendMessage}
         />
         <Button variant="contained" color="error" onClick={handleLeaveChat}>
           Leave

@@ -2,12 +2,13 @@ import { useEffect, useMemo } from "react";
 import socket from "../../socket/socket";
 import { useAuthenticatedUser } from "./useAuthenticatedUser";
 
-export const useSocket = () => {
+export const useSocket = (chatId?: string) => {
   const { user } = useAuthenticatedUser();
 
   const activeSocket = useMemo(() => {
     socket.auth = {
       userId: user?.id,
+      chatId,
     };
     return socket.connect();
   }, [user]);
