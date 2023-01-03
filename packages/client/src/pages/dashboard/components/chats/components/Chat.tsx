@@ -19,6 +19,9 @@ import classes from "./styles.module.css";
 
 import { getMac } from "../../../utils/encryption/mac";
 import { receiveMessageHandler } from "./handlers";
+import CryptoJS from "crypto-js";
+import JSEncrypt from "jsencrypt";
+import { toast } from "react-toastify";
 
 const getMessagesQuery = (chatId: number) => ({
   queryKey: ["messages", chatId],
@@ -75,6 +78,16 @@ export const Chat = () => {
     const newMessage = receiveMessageHandler(socketData);
     if (newMessage) setAllMessages([...allMessages, newMessage]);
   });
+
+  socket.on("getPublicKey", (data) => {
+    const jsEncrypt = new JSEncrypt();
+    jsEncrypt.setPublicKey(data);
+    const encrypted = jsEncrypt.encrypt("my-key");
+
+    socket.emit("sendSessionKey", encrypted);
+  });
+
+  socket.on("confirmConnection", (data) => console.log(data));
 
   const handleSendMessage = (
     event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
