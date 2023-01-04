@@ -9,8 +9,8 @@ import { Server } from "socket.io";
 import chatsHandlers from "./handlers/chatsHandlers";
 import messagesHandlers from "./handlers/messagesHandlers";
 import socketVerficationMiddleware from "./middlewares/socket.middleware";
-import { getMac, decryptMac } from "./utils/encryption/mac";
-import prisma from "./db";
+import { receiveSessionKeyHandler } from "./handlers/sessionsHandler";
+import { getKeys } from "./utils/encryption/pgp";
 
 const { handleCreateChat } = chatsHandlers;
 const { receiveMessageHandler } = messagesHandlers;
@@ -37,6 +37,8 @@ const socketIO = new Server(httpServer, {
   },
 });
 
+const keys = getKeys();
+
 /**
  * Socket middlware
  */
@@ -50,6 +52,10 @@ socketIO.on("connection", (socket) => {
     "send message",
     receiveMessageHandler.bind({ socket, io: socketIO })
   );
+
+  socket.emit("getPublicKey", keys.publicKey);
+
+  socket.on("sendSessionKey", receiveSessionKeyHandler.bind(socket));
 });
 
 app.get("/", (req, res) => {

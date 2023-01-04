@@ -14,24 +14,29 @@ async function receiveMessageHandler(payload: {
   const { socket, io } = this;
   const userId = Number(socket.handshake.auth.userId as string);
 
-  // Generating the HMAC for the tag.
-  const HMAC = CryptoJS.HmacSHA256(payload.tag, "my-key").toString();
-  // Make sure that the HMAC is equal to the one which we receive it.
-  if (payload.hmac === HMAC) {
-    // Decrypt the message to get its data.
-    const res = decryptMac(payload.tag, "my-key", payload.iv);
-    const receivedMessage = JSON.parse(res);
-    const newMessage = await prisma.message.create({
-      data: {
-        userId: userId,
-        chatId: receivedMessage.chatId,
-        content: receivedMessage.message,
-      },
-    });
+  if (process.env.MAC_KEY) {
+    // Generating the HMAC for the tag.
+    const HMAC = CryptoJS.HmacSHA256(
+      payload.tag,
+      process.env.MAC_KEY
+    ).toString();
+    // Make sure that the HMAC is equal to the one which we receive it.
+    if (payload.hmac === HMAC) {
+      // Decrypt the message to get its data.
+      const res = decryptMac(payload.tag, process.env.MAC_KEY, payload.iv);
+      const receivedMessage = JSON.parse(res);
+      const newMessage = await prisma.message.create({
+        data: {
+          userId: userId,
+          chatId: receivedMessage.chatId,
+          content: receivedMessage.message,
+        },
+      });
 
-    const mac = getMac(JSON.stringify(newMessage), "my-key");
+      const mac = getMac(JSON.stringify(newMessage), process.env.MAC_KEY);
 
-    io.in(receivedMessage.chatId.toString()).emit("messagesList", mac);
+      io.in(receivedMessage.chatId.toString()).emit("messagesList", mac);
+    }
   }
 }
 
