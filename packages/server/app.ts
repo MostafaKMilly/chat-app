@@ -50,12 +50,21 @@ socketIO.on("connection", (socket) => {
   socket.on("createChat", handleCreateChat.bind(socket));
   socket.on(
     "send message",
-    receiveMessageHandler.bind({ socket, io: socketIO })
+    receiveMessageHandler.bind({
+      socket,
+      io: socketIO,
+    })
   );
 
   socket.emit("getPublicKey", keys.publicKey);
 
-  socket.on("sendSessionKey", receiveSessionKeyHandler.bind(socket));
+  socket.on(
+    "sendSessionKey",
+    receiveSessionKeyHandler.bind({
+      socket,
+      userId: socket.handshake.auth.userId as string,
+    })
+  );
 });
 
 app.get("/", (req, res) => {

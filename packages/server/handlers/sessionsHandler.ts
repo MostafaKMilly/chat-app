@@ -3,21 +3,42 @@ import JSEncrypt from "nodejs-jsencrypt";
 import { Socket } from "socket.io";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { getKeys } from "../utils/encryption/pgp";
+import prisma from "../db";
 
-export function receiveSessionKeyHandler(data: any) {
+export async function receiveSessionKeyHandler(data: any) {
   const socket: Socket<
     DefaultEventsMap,
     DefaultEventsMap,
     DefaultEventsMap,
     any
     // @ts-ignore
-  > = this;
+  > = this.socket;
+  // @ts-ignore
+  const userId: number = Number(this.userId);
+
   const keys = getKeys();
   const jsEncrypt = new JSEncrypt();
   jsEncrypt.setPrivateKey(keys.privateKey);
   const decrypted = jsEncrypt.decrypt(data);
   if (decrypted) {
-    process.env["MAC_KEY"] = decrypted;
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+    if(user){
+      const newUser = await prisma.user.update({
+        where: {
+          id: userId
+        },
+        data: {
+          macKey: decrypted.toString();
+        }
+      })
+      
+    }
+    
+
     socket.emit("confirmConnection", "Connected securely");
   }
 }

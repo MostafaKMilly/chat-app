@@ -28,7 +28,7 @@ export const AuthProvider = ({
   );
 };
 
-type AuthenticatedUser = {
+export type AuthenticatedUser = {
   id: number;
   firstName: string;
   lastName: string;

@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE `user` ADD COLUMN `dsKey` VARCHAR(50) NULL,
+    ADD COLUMN `macKey` VARCHAR(50) NULL;

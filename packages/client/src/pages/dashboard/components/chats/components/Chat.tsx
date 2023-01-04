@@ -7,6 +7,7 @@ import {
   useLoaderData,
   useNavigate,
   useParams,
+  useRevalidator,
 } from "react-router-dom";
 import { QueryClient } from "@tanstack/react-query";
 import API from "../../../../../api/httpClient";
@@ -16,12 +17,13 @@ import { Messages } from "../types/messages.types";
 import { useAuthenticatedUser } from "../../../../../shared/hooks";
 import { useSocket } from "../../../../../shared/hooks/useSocket";
 import classes from "./styles.module.css";
-
 import { getMac } from "../../../utils/encryption/mac";
 import { receiveMessageHandler } from "./handlers";
-import CryptoJS from "crypto-js";
 import JSEncrypt from "jsencrypt";
-import { toast } from "react-toastify";
+// @ts-ignore
+import { RSA } from "hybrid-crypto-js";
+import { validate } from "../../../utils/encryption/digital-signature";
+const rsa = new RSA();
 
 const getMessagesQuery = (chatId: number) => ({
   queryKey: ["messages", chatId],
@@ -48,6 +50,9 @@ export const Chat = () => {
   const { socket } = useSocket(chatId);
   const [allMessages, setAllMessages] = useState<Messages>([]);
   const [failed, setFailed] = useState<boolean>(false);
+  const [publicKey, setPublicKey] = useState<string>();
+  const [privateKey, setPrivateKey] = useState<string>();
+  const revalidate = useRevalidator();
 
   useEffect(() => {
     data?.messages?.data
@@ -60,6 +65,17 @@ export const Chat = () => {
             setFailed(true);
           });
   }, [data]);
+
+  /* useEffect(() => {
+    revalidate.revalidate();
+  }, [chatId]); */
+
+  useEffect(() => {
+    rsa.generateKeyPairAsync()?.then((keyPair: any) => {
+      setPublicKey(keyPair.publicKey);
+      setPrivateKey(keyPair.privateKey);
+    });
+  }, []);
 
   const handleLeaveChat = () => {
     navigate("/");
@@ -75,14 +91,16 @@ export const Chat = () => {
   }, [allMessages]);
 
   socket.on("messagesList", (socketData) => {
-    const newMessage = receiveMessageHandler(socketData);
+    const newMessage = receiveMessageHandler(socketData, user);
     if (newMessage) setAllMessages([...allMessages, newMessage]);
   });
 
   socket.on("getPublicKey", (data) => {
     const jsEncrypt = new JSEncrypt();
     jsEncrypt.setPublicKey(data);
-    const encrypted = jsEncrypt.encrypt("my-key");
+    const encrypted = jsEncrypt.encrypt(
+      `${user?.id}${user?.firstName}${user?.lastName}`
+    );
 
     socket.emit("sendSessionKey", encrypted);
   });
@@ -94,12 +112,13 @@ export const Chat = () => {
   ) => {
     if (event.key === "Enter") {
       const newMessage = {
-        chatId: Number(chatId),
         message: event.currentTarget.value,
       };
-      const mac = getMac(JSON.stringify(newMessage), "my-key");
-
-      socket.emit("send message", mac);
+      const mac = getMac(
+        JSON.stringify(newMessage),
+        `${user?.id}${user?.firstName}${user?.lastName}`
+      );
+      socket.emit("send message", { mac, chatId });
       event.currentTarget.value = "";
     }
   };
