@@ -18,7 +18,8 @@ const chatsQuery = {
 
 const loader = (client: QueryClient) => async () => {
   const chats =
-    client.getQueryData(chatsQuery.queryKey) ?? client.fetchQuery(chatsQuery);
+    client.getQueryData(chatsQuery.queryKey) ??
+    (await client.fetchQuery(chatsQuery));
 
   return defer({ chats });
 };

@@ -15,7 +15,6 @@ async function handleCreateChat(payload: { recipientId: number }) {
 
   const newChat = await prisma.chat.create({
     data: {
-      messages: [] as Prisma.chatCreateInput["messages"],
       users: {
         createMany: {
           data: [

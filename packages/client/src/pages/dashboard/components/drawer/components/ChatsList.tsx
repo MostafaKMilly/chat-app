@@ -12,8 +12,13 @@ import { useAsyncValue, useLocation } from "react-router-dom";
 import { Chats } from "../types/chats.types";
 import PersonIcon from "@mui/icons-material/Person";
 
-export const ChatsList = ({ toLink }: { toLink: (chatId: number) => void }) => {
-  const chats = useAsyncValue() as Chats;
+export const ChatsList = ({
+  toLink,
+  chats,
+}: {
+  toLink: (chatId: number) => void;
+  chats: Chats;
+}) => {
   const { pathname } = useLocation();
 
   return (
@@ -24,7 +29,6 @@ export const ChatsList = ({ toLink }: { toLink: (chatId: number) => void }) => {
         display: "flex",
         flexDirection: "column",
         mt: 1,
-        height: "100%",
       }}
     >
       {chats.map((chat) => (
