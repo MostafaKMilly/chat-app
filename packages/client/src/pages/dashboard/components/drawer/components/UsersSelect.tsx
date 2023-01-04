@@ -33,7 +33,7 @@ function UsersSelect(props: UsersSelectProps) {
       onChange={(_, value) => props.onChange(value.id)}
       renderOption={(props, option) => (
         <ListItem {...props} key={props.id}>
-          {option.firstName + " " + option.lastName}
+          {option.firstName + " " + option.lastName + " " + option.phone}
         </ListItem>
       )}
     />

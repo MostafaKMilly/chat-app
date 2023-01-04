@@ -28,6 +28,16 @@ async function handleCreateChat(payload: { recipientId: number }) {
         },
       },
     },
+    select: {
+      users: {
+        where: {
+          userId: payload.recipientId,
+        },
+        include: {
+          user: true,
+        },
+      },
+    },
   });
   socket.emit("chatList", newChat);
 }
