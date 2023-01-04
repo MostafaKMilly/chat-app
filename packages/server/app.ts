@@ -9,6 +9,7 @@ import { Server } from "socket.io";
 import chatsHandlers from "./handlers/chatsHandlers";
 import messagesHandlers from "./handlers/messagesHandlers";
 import socketVerficationMiddleware from "./middlewares/socket.middleware";
+import { getMac, decryptMac } from "./utils/encryption/mac";
 import prisma from "./db";
 
 const { handleCreateChat } = chatsHandlers;
