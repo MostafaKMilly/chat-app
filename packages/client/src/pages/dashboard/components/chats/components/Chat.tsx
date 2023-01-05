@@ -72,7 +72,7 @@ export const Chat = () => {
   }, [allMessages]);
 
   socket.on("messagesList", (socketData) => {
-    const newMessage = receiveMessageHandler(socketData);
+    const newMessage = receiveMessageHandler(socketData, user!);
     if (newMessage) setAllMessages([...allMessages, newMessage]);
   });
 
@@ -81,12 +81,12 @@ export const Chat = () => {
   ) => {
     if (event.key === "Enter") {
       const newMessage = {
-        chatId: Number(chatId),
         message: event.currentTarget.value,
       };
-      const mac = getMac(JSON.stringify(newMessage), "my-key");
+      console.log(user);
 
-      socket.emit("send message", mac);
+      const mac = getMac(JSON.stringify(newMessage), user?.macKey);
+      socket.emit("send message", { mac, chatId });
       event.currentTarget.value = "";
     }
   };

@@ -11,9 +11,10 @@ export const getUserInfo = () => {
   return user as null | AuthenticatedUser;
 };
 
-type AuthenticatedUser = {
+export type AuthenticatedUser = {
   id: number;
   firstName: string;
   lastName: string;
   phone: string;
+  macKey?: string;
 };
