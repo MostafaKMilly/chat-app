@@ -66,10 +66,6 @@ export const Chat = () => {
           });
   }, [data]);
 
-  /* useEffect(() => {
-    revalidate.revalidate();
-  }, [chatId]); */
-
   useEffect(() => {
     rsa.generateKeyPairAsync()?.then((keyPair: any) => {
       setPublicKey(keyPair.publicKey);
@@ -91,18 +87,18 @@ export const Chat = () => {
   }, [allMessages]);
 
   socket.on("messagesList", (socketData) => {
-    const newMessage = receiveMessageHandler(socketData, user);
-    if (newMessage) setAllMessages([...allMessages, newMessage]);
+    const newMessage = receiveMessageHandler(
+      socketData,
+      user,
+      privateKey?.toString() || ""
+    );
+    // if (newMessage) setAllMessages([...allMessages, newMessage]);
   });
 
-  socket.on("getPublicKey", (data) => {
-    const jsEncrypt = new JSEncrypt();
-    jsEncrypt.setPublicKey(data);
-    const encrypted = jsEncrypt.encrypt(
-      `${user?.id}${user?.firstName}${user?.lastName}`
-    );
-
-    socket.emit("sendSessionKey", encrypted);
+  socket.on("getPublicKey", () => {
+    setTimeout(() => {
+      socket.emit("sendSessionKey", publicKey?.toString());
+    }, 2000);
   });
 
   socket.on("confirmConnection", (data) => console.log(data));
@@ -111,14 +107,9 @@ export const Chat = () => {
     event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     if (event.key === "Enter") {
-      const newMessage = {
-        message: event.currentTarget.value,
-      };
-      const mac = getMac(
-        JSON.stringify(newMessage),
-        `${user?.id}${user?.firstName}${user?.lastName}`
-      );
-      socket.emit("send message", { mac, chatId });
+      const newMessage = event.currentTarget.value;
+
+      socket.emit("send message", { newMessage, chatId });
       event.currentTarget.value = "";
     }
   };

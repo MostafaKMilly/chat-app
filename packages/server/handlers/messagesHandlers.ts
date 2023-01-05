@@ -6,12 +6,21 @@ const CryptoJS = require("crypto-js");
 import JSEncrypt from "nodejs-jsencrypt";
 
 async function receiveMessageHandler(payload: {
-  mac: { hmac: string; tag: string; iv: CryptoJS.lib.WordArray };
+  newMessage: string;
   chatId: string;
 }) {
   // @ts-ignore
   const { socket, io } = this;
   const userId = Number(socket.handshake.auth.userId as string);
+  const keys = getKeys();
+
+  const newMessage = await prisma.message.create({
+    data: {
+      userId: userId,
+      chatId: Number(payload.chatId),
+      content: payload.newMessage,
+    },
+  });
 
   const user = await prisma.user.findUnique({
     where: {
@@ -45,11 +54,55 @@ async function receiveMessageHandler(payload: {
 
   const receiver = receiverChats?.[0]?.users?.[0]?.user;
 
-  console.log(user);
-  console.log(receiver);
-  console.log(payload.chatId);
+  const hash = CryptoJS.MD5(newMessage).toString();
+  const jsEncrypt = new JSEncrypt();
 
-  const keys = getKeys();
+  jsEncrypt.setPublicKey(user?.dsKey || "");
+  const senderSignature = jsEncrypt.encrypt(hash || "");
+
+  jsEncrypt.setPublicKey(receiver?.dsKey || "");
+  const receiverSignature = jsEncrypt.encrypt(hash || "");
+
+  io.in(payload.chatId).emit("messagesList", {
+    senderId: userId,
+    sender: { data: JSON.stringify(newMessage), signature: senderSignature },
+    receiver: {
+      data: JSON.stringify(newMessage),
+      signature: receiverSignature,
+    },
+  });
+
+  /* const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  const receiverChats = await prisma.chat.findMany({
+    select: {
+      users: {
+        where: {
+          NOT: {
+            user: {
+              id: userId,
+            },
+          },
+        },
+        include: {
+          user: true,
+        },
+      },
+    },
+    where: {
+      AND: [
+        {
+          id: Number(payload.chatId),
+        },
+      ],
+    },
+  });
+
+  const receiver = receiverChats?.[0]?.users?.[0]?.user;
 
   if (user?.macKey) {
     // Generating the HMAC for the tag.
@@ -67,15 +120,6 @@ async function receiveMessageHandler(payload: {
         },
       });
 
-      /* const hash = CryptoJS.MD5(newMessage);
-      const jsEncrypt = new JSEncrypt();
-      jsEncrypt.setPublicKey(keys.publicKey);
-      const signature = jsEncrypt.encrypt(hash.toString());
-
-      io.in(receivedMessage.chatId.toString()).emit("messagesList", {
-        signature,
-        data: newMessage,
-      }); */
 
       const senderMac = getMac(JSON.stringify(newMessage), user?.macKey);
       const receiverMac = getMac(JSON.stringify(newMessage), receiver?.macKey);
@@ -86,7 +130,7 @@ async function receiveMessageHandler(payload: {
         receiver: receiverMac,
       });
     }
-  }
+  } */
 }
 
 export default {

@@ -20,7 +20,7 @@ model user {
   message   message[]
   chats     usersOnChats[]
   macKey   String?          @db.VarChar(50) 
-  dsKey    String?         @db.VarChar(50)
+  dsKey    String?         @db.VarChar(5000)
 }
 
 model usersOnChats {
