@@ -46,10 +46,12 @@ async function receiveMessageHandler(payload: {
   const receiver = receiverChats?.[0]?.users?.[0]?.user;
 
   // Generating the HMAC for the tag.
+  // @ts-ignore
   const HMAC = CryptoJS.HmacSHA256(payload.mac.tag, user.macKey).toString();
   // Make sure that the HMAC is equal to the one which we receive it.
   if (payload.mac.hmac === HMAC) {
     // Decrypt the message to get its data.
+    // @ts-ignore
     const res = decryptMac(payload.mac.tag, user.macKey, payload.mac.iv);
     const receivedMessage = JSON.parse(res);
     const newMessage = await prisma.message.create({

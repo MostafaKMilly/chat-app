@@ -83,8 +83,8 @@ export const Chat = () => {
       const newMessage = {
         message: event.currentTarget.value,
       };
-      console.log(user);
 
+      // @ts-ignore
       const mac = getMac(JSON.stringify(newMessage), user?.macKey);
       socket.emit("send message", { mac, chatId });
       event.currentTarget.value = "";
