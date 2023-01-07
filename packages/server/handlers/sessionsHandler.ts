@@ -16,11 +16,6 @@ export async function receiveSessionKeyHandler(data: any) {
   // @ts-ignore
   const userId: number = Number(this.userId);
 
-  const keys = getKeys();
-  /* const jsEncrypt = new JSEncrypt();
-  jsEncrypt.setPrivateKey(keys.privateKey);
-  const decrypted = jsEncrypt.decrypt(data); */
-
   if (data) {
     const user = await prisma.user.findUnique({
       where: {
@@ -36,8 +31,7 @@ export async function receiveSessionKeyHandler(data: any) {
           dsKey: data,
         },
       });
+      socket.emit("confirmConnection", "Connected securely");
     }
-
-    socket.emit("confirmConnection", "Connected securely");
   }
 }

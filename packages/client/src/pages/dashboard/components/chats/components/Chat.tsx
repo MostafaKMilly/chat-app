@@ -68,8 +68,8 @@ export const Chat = () => {
 
   useEffect(() => {
     rsa.generateKeyPairAsync()?.then((keyPair: any) => {
-      setPublicKey(keyPair.publicKey);
-      setPrivateKey(keyPair.privateKey);
+      setPublicKey(keyPair.publicKey?.toString());
+      setPrivateKey(keyPair.privateKey?.toString());
     });
   }, []);
 
@@ -86,19 +86,17 @@ export const Chat = () => {
     }
   }, [allMessages]);
 
+  useEffect(() => {
+    socket.emit("sendSessionKey", publicKey);
+  }, [publicKey]);
+
   socket.on("messagesList", (socketData) => {
     const newMessage = receiveMessageHandler(
       socketData,
       user,
-      privateKey?.toString() || ""
+      privateKey || ""
     );
-    // if (newMessage) setAllMessages([...allMessages, newMessage]);
-  });
-
-  socket.on("getPublicKey", () => {
-    setTimeout(() => {
-      socket.emit("sendSessionKey", publicKey?.toString());
-    }, 2000);
+    if (newMessage) setAllMessages([...allMessages, newMessage]);
   });
 
   socket.on("confirmConnection", (data) => console.log(data));
