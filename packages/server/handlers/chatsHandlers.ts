@@ -39,6 +39,7 @@ async function handleCreateChat(payload: { recipientId: number }) {
       },
     },
   });
+  socket.join(newChat.users[0].chatId.toString());
   socket.emit("chatList", newChat);
 }
 

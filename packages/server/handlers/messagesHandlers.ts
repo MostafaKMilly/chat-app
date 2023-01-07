@@ -34,7 +34,7 @@ async function receiveMessageHandler(payload: {
       });
 
       const mac = getMac(JSON.stringify(newMessage), process.env.MAC_KEY);
-
+      console.log(receivedMessage, userId, payload);
       io.in(receivedMessage.chatId.toString()).emit("messagesList", mac);
     }
   }

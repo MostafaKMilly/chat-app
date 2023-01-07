@@ -1,34 +1,39 @@
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { useLoaderData } from "react-router-dom";
 import { useSocket } from "../../../../../shared/hooks/useSocket";
+import { chatsQuery } from "../../../Dashboard";
 import { Chats } from "../types/chats.types";
 
-export const useChats = () => {
-  const { chats: chatsData } = useLoaderData() as { chats: Chats };
+export const useChats = (phoneNumber: string | undefined) => {
   const { socket } = useSocket();
-  const [chats, setChats] = useState(chatsData);
-  const [filterdChats, setFilterdChats] = useState(chatsData);
+  const { data: chatsData = [] } = useQuery<Chats>({
+    ...chatsQuery,
+    select: (chats) => {
+      if (!phoneNumber) {
+        return chats;
+      }
+      return chats.filter((chat) => chat.receipentPhone.includes(phoneNumber));
+    },
+  });
+  const client = useQueryClient();
 
   useEffect(() => {
     socket.on("chatList", ({ users }) => {
       const [chat] = users;
       const newChat = {
-        id: chat.id,
+        id: chat.chatId,
         receipentFistName: chat.user.firstName,
         receipentPhone: chat.user.phone,
       };
-      setChats([...chatsData, newChat]);
+      client.setQueriesData<Chats[]>(chatsQuery.queryKey, (oldData) => {
+        return oldData ? ([...oldData, newChat] as Chats[]) : oldData;
+      });
     });
-  }, []);
-  const filterChats = (number: string) => {
-    if (!number) {
-      setFilterdChats(chats);
-      return;
-    }
-    setFilterdChats(
-      chats.filter((chat) => chat.receipentPhone.includes(number))
-    );
-  };
+    return () => {
+      socket.off("chatList");
+    };
+  }, [client]);
 
-  return { chats: filterdChats, filterChats };
+  return { chats: chatsData };
 };

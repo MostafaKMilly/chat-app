@@ -17,6 +17,7 @@ function AddChatDialog(props: Omit<GenericDialogProps, "dialog">) {
       onSubmit={() => {
         socket.emit("createChat", { recipientId: user });
         props.onClose();
+        setUser(undefined);
       }}
       dialog={{
         title: "Add Chat",

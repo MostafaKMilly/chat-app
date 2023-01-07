@@ -24,18 +24,21 @@ function UsersSelect(props: UsersSelectProps) {
 
   return (
     <Autocomplete
-      options={data?.data}
+      options={data?.data || []}
       loading={isLoading}
       renderInput={(params) => <TextField {...params} label="Users" />}
       getOptionLabel={(option: any) => option.firstName + " " + option.lastName}
       filterOptions={filterOptions}
       value={props.value}
-      onChange={(_, value) => props.onChange(value.id)}
+      onChange={(_, value) => props.onChange(value?.id)}
       renderOption={(props, option) => (
         <ListItem {...props} key={props.id}>
           {option.firstName + " " + option.lastName + " " + option.phone}
         </ListItem>
       )}
+      isOptionEqualToValue={(option, value) => {
+        return option.id === value;
+      }}
     />
   );
 }

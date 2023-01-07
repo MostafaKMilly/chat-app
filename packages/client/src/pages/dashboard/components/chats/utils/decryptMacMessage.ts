@@ -1,8 +1,8 @@
 import CryptoJS from "crypto-js";
-import { decryptMac } from "../../../../utils/encryption/mac";
-import { MessageItem } from "../../types/messages.types";
+import { decryptMac } from "../../../utils/encryption/mac";
+import { MessageItem } from "../types/messages.types";
 
-export function receiveMessageHandler(socketData: {
+export function decryptMacMessage(socketData: {
   tag: string;
   hmac: string;
   iv: CryptoJS.lib.WordArray;

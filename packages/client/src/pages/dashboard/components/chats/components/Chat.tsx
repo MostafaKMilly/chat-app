@@ -1,65 +1,35 @@
 import { Box, InputBase, Button } from "@mui/material";
 import { Message } from "./Message";
 import EditIcon from "@mui/icons-material/Edit";
-import {
-  defer,
-  LoaderFunctionArgs,
-  useLoaderData,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
+import { LoaderFunctionArgs, useNavigate } from "react-router-dom";
 import { QueryClient } from "@tanstack/react-query";
 import API from "../../../../../api/httpClient";
-import { Suspense, useEffect, useState, useRef } from "react";
-import { LoadingSpinner } from "../../../../../shared/components";
-import { Messages } from "../types/messages.types";
+import { useEffect, useRef } from "react";
 import { useAuthenticatedUser } from "../../../../../shared/hooks";
-import { useSocket } from "../../../../../shared/hooks/useSocket";
 import classes from "./styles.module.css";
-
-import { getMac } from "../../../utils/encryption/mac";
-import { receiveMessageHandler } from "./handlers";
-import CryptoJS from "crypto-js";
-import JSEncrypt from "jsencrypt";
-import { toast } from "react-toastify";
+import { useMessages } from "../hooks/useMessages";
 
 const getMessagesQuery = (chatId: number) => ({
   queryKey: ["messages", chatId],
-  queryFn: () => API.post("/messages", { chatId }),
+  queryFn: () => API.post("/messages", { chatId }, (res) => res),
 });
 
-const loader =
+export const loader =
   (client: QueryClient) =>
   async ({ params }: LoaderFunctionArgs) => {
     const chatId = Number(params.chatId);
     const messages =
       client.getQueryData(getMessagesQuery(chatId).queryKey) ??
-      client.fetchQuery(getMessagesQuery(chatId));
+      (await client.fetchQuery(getMessagesQuery(chatId)));
 
-    return defer({ messages });
+    return { messages };
   };
 
 export const Chat = () => {
-  const { chatId } = useParams();
-  const data = useLoaderData() as Record<string, any>;
   const chatBoxRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const { user } = useAuthenticatedUser();
-  const { socket } = useSocket(chatId);
-  const [allMessages, setAllMessages] = useState<Messages>([]);
-  const [failed, setFailed] = useState<boolean>(false);
-
-  useEffect(() => {
-    data?.messages?.data
-      ? setAllMessages(data?.messages?.data)
-      : data.messages
-          ?.then((response: { data: Messages }) => {
-            setAllMessages(response.data);
-          })
-          ?.catch(() => {
-            setFailed(true);
-          });
-  }, [data]);
+  const { messages, handleSendMessage } = useMessages();
 
   const handleLeaveChat = () => {
     navigate("/");
@@ -72,37 +42,7 @@ export const Chat = () => {
       const maxScrollTop = scrollHeight - height;
       chatBoxRef.current.scrollTop = maxScrollTop > 0 ? maxScrollTop : 0;
     }
-  }, [allMessages]);
-
-  socket.on("messagesList", (socketData) => {
-    const newMessage = receiveMessageHandler(socketData);
-    if (newMessage) setAllMessages([...allMessages, newMessage]);
-  });
-
-  socket.on("getPublicKey", (data) => {
-    const jsEncrypt = new JSEncrypt();
-    jsEncrypt.setPublicKey(data);
-    const encrypted = jsEncrypt.encrypt("my-key");
-
-    socket.emit("sendSessionKey", encrypted);
-  });
-
-  socket.on("confirmConnection", (data) => console.log(data));
-
-  const handleSendMessage = (
-    event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    if (event.key === "Enter") {
-      const newMessage = {
-        chatId: Number(chatId),
-        message: event.currentTarget.value,
-      };
-      const mac = getMac(JSON.stringify(newMessage), "my-key");
-
-      socket.emit("send message", mac);
-      event.currentTarget.value = "";
-    }
-  };
+  }, []);
 
   return (
     <Box height="100%" width="100%" position="relative">
@@ -118,19 +58,13 @@ export const Chat = () => {
         ref={chatBoxRef}
         className={classes.chatBox}
       >
-        <Suspense fallback={<LoadingSpinner />}>
-          <>
-            {failed
-              ? "Failed"
-              : allMessages.map((message) => (
-                  <Message
-                    key={message.id}
-                    content={message.content}
-                    type={user?.id === message.userId ? "recipient" : "sender"}
-                  />
-                ))}
-          </>
-        </Suspense>
+        {messages.map((message) => (
+          <Message
+            key={message.id}
+            content={message.content}
+            type={user?.id === message.userId ? "recipient" : "sender"}
+          />
+        ))}
       </Box>
       <Box
         position="absolute"

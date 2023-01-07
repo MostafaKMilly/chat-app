@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import React, { createContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUserInfo } from "../shared/utils";
@@ -14,10 +15,12 @@ export const AuthProvider = ({
 }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState(getUserInfo);
+  const client = useQueryClient();
 
   const handleSignout = () => {
     setUser(null);
     localStorage.clear();
+    client.clear();
     navigate("/login");
   };
 

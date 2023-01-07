@@ -17,7 +17,8 @@ import { useChats } from "./hooks/useChats";
 import AddChatDialog from "./components/AddChatDialog";
 
 export const AppDrawer = ({ open, toggleDrawer }: AppDrawerProps) => {
-  const { chats, filterChats } = useChats();
+  const [phoneNumber, setPhoneNumber] = useState<string>();
+  const { chats } = useChats(phoneNumber);
   const matches = useMediaQuery<Theme>((theme) => theme.breakpoints.up("sm"));
   const navigate = useNavigate();
   const [openDialog, setOpenDialog] = useState(false);
@@ -58,10 +59,11 @@ export const AppDrawer = ({ open, toggleDrawer }: AppDrawerProps) => {
         <TextField
           type="search"
           placeholder="Search for number ..."
+          value={phoneNumber}
           InputProps={{
             startAdornment: <SearchIcon sx={{ mr: 1, color: "grey.400" }} />,
           }}
-          onChange={(e) => filterChats(e.target.value)}
+          onChange={(e) => setPhoneNumber(e.target.value)}
         />
       </DrawerHeader>
       <ChatsList toLink={toLink} chats={chats} />
