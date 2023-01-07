@@ -55,7 +55,13 @@ socketIO.on("connection", (socket) => {
 
   socket.emit("getPublicKey", keys.publicKey);
 
-  socket.on("sendSessionKey", receiveSessionKeyHandler.bind(socket));
+  socket.on(
+    "sendSessionKey",
+    receiveSessionKeyHandler.bind({
+      socket,
+      userId: socket.handshake.auth.userId as string,
+    })
+  );
 });
 
 app.get("/", (req, res) => {

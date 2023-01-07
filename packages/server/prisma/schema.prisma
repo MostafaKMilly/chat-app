@@ -19,6 +19,7 @@ model user {
   createdAt DateTime       @default(now())
   message   message[]
   chats     usersOnChats[]
+  macKey    String?         @db.VarChar(500)
 }
 
 model usersOnChats {

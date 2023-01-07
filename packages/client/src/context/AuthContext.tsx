@@ -5,7 +5,8 @@ import { getUserInfo } from "../shared/utils";
 export const AuthContext = createContext<{
   user: AuthenticatedUser | null;
   handleSignout: () => void;
-}>({ user: null, handleSignout: () => {} });
+  setUser: React.Dispatch<React.SetStateAction<AuthenticatedUser | null>>;
+}>({ user: null, handleSignout: () => {}, setUser: () => {} });
 
 export const AuthProvider = ({
   children,
@@ -22,7 +23,7 @@ export const AuthProvider = ({
   };
 
   return (
-    <AuthContext.Provider value={{ user, handleSignout }}>
+    <AuthContext.Provider value={{ user, handleSignout, setUser }}>
       {children}
     </AuthContext.Provider>
   );

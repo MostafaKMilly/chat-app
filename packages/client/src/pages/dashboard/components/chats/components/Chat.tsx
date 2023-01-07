@@ -44,7 +44,7 @@ export const Chat = () => {
   const data = useLoaderData() as Record<string, any>;
   const chatBoxRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  const { user } = useAuthenticatedUser();
+  const { user, setUser } = useAuthenticatedUser();
   const { socket } = useSocket(chatId);
   const [allMessages, setAllMessages] = useState<Messages>([]);
   const [failed, setFailed] = useState<boolean>(false);
@@ -75,31 +75,35 @@ export const Chat = () => {
   }, [allMessages]);
 
   socket.on("messagesList", (socketData) => {
-    const newMessage = receiveMessageHandler(socketData);
+    const newMessage = receiveMessageHandler(socketData, user!);
     if (newMessage) setAllMessages([...allMessages, newMessage]);
   });
 
   socket.on("getPublicKey", (data) => {
     const jsEncrypt = new JSEncrypt();
     jsEncrypt.setPublicKey(data);
-    const encrypted = jsEncrypt.encrypt("my-key");
+    const encrypted = jsEncrypt.encrypt(user?.firstName || "my-key");
 
     socket.emit("sendSessionKey", encrypted);
   });
 
-  socket.on("confirmConnection", (data) => console.log(data));
+  socket.on("confirmConnection", (data) => {
+    if (data) {
+      console.log(data.message);
+      setUser(data.user);
+    }
+  });
 
   const handleSendMessage = (
     event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     if (event.key === "Enter") {
       const newMessage = {
-        chatId: Number(chatId),
         message: event.currentTarget.value,
       };
-      const mac = getMac(JSON.stringify(newMessage), "my-key");
 
-      socket.emit("send message", mac);
+      const mac = getMac(JSON.stringify(newMessage), user?.macKey);
+      socket.emit("send message", { mac, chatId });
       event.currentTarget.value = "";
     }
   };
