@@ -47,7 +47,7 @@ async function receiveMessageHandler(payload: {
   // Make sure that the HMAC is equal to the one which we receive it.
   if (payload.mac.hmac === HMAC) {
     // Decrypt the message to get its data.
-    const res = decryptMac(payload.mac.tag, user?.macKey, payload.mac.iv);
+    const res = decryptMac(payload.mac.tag, user?.macKey || "", payload.mac.iv);
     const receivedMessage = JSON.parse(res);
     const newMessage = await prisma.message.create({
       data: {
