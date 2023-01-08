@@ -1,6 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
-import { useLoaderData } from "react-router-dom";
+import { useEffect } from "react";
 import { useSocket } from "../../../../../shared/hooks/useSocket";
 import { chatsQuery } from "../../../Dashboard";
 import { Chats } from "../types/chats.types";
@@ -32,8 +31,9 @@ export const useChats = (phoneNumber: string | undefined) => {
     });
     return () => {
       socket.off("chatList");
+      socket.disconnect();
     };
-  }, [client]);
+  }, [client, socket]);
 
   return { chats: chatsData };
 };

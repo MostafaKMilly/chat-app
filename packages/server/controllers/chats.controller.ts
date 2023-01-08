@@ -23,7 +23,7 @@ router.get(
   auth.required,
   async (req: ExpressJwtRequest, res: Response, next: NextFunction) => {
     try {
-      const users = await getUsers();
+      const users = await getUsers(req.auth?.id);
       res.json(users);
     } catch (error) {
       next(error);

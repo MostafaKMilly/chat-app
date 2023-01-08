@@ -36,8 +36,15 @@ export const getChats = async (userId: number) => {
   return chats;
 };
 
-export const getUsers = async () => {
+export const getUsers = async (userId: number) => {
   const users = await prisma.user.findMany({
+    where: {
+      id: {
+        not: {
+          equals: userId,
+        },
+      },
+    },
     select: {
       firstName: true,
       lastName: true,

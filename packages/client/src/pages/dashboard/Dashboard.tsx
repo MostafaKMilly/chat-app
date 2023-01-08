@@ -1,7 +1,7 @@
 import { Box, Toolbar } from "@mui/material";
 import { QueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { defer, Outlet, redirect, useNavigation } from "react-router-dom";
+import { Outlet, redirect, useNavigation } from "react-router-dom";
 import API from "../../api/httpClient";
 import { AppBar } from "./components/appbar";
 import { ChatsContainer } from "./components/chats";
@@ -12,13 +12,14 @@ import { mapChatsResponse } from "./utils";
 export const chatsQuery = {
   queryKey: ["chats"],
   queryFn: () => API.get<Chats, RawChats>("/chats", mapChatsResponse),
+  cacheTime: 0,
 };
 
 export const loader = (client: QueryClient) => async () => {
   const chats =
     client.getQueryData(chatsQuery.queryKey) ??
     (await client.fetchQuery(chatsQuery));
-  return defer({ chats });
+  return { chats };
 };
 
 export const Dashboard = () => {
