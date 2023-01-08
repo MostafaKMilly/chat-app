@@ -5,7 +5,7 @@ import { Request as ExpressJwtRequest } from "express-jwt";
 
 const router = Router();
 
-router.get(
+router.post(
   "/messages",
   auth.required,
   async (req: ExpressJwtRequest, res: Response, next: NextFunction) => {

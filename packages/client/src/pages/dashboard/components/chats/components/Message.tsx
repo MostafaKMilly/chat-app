@@ -1,12 +1,11 @@
 import { Paper, Typography, Box } from "@mui/material";
-import { useAsyncValue } from "react-router-dom";
 
 export const Message = ({ content, type }: MessageProps) => {
-  const data = useAsyncValue();
-  console.log(data)
   return (
     <Box
-      sx={{ textAlign: type === "sender" ? "-webkit-right" : "-webkit-left" }}
+      sx={{
+        textAlign: type === "recipient" ? "-webkit-right" : "-webkit-left",
+      }}
     >
       <Paper
         sx={{
@@ -16,7 +15,7 @@ export const Message = ({ content, type }: MessageProps) => {
           maxwidth: "450px",
           maxHeight: "160px",
           backgroundColor:
-            type === "sender" ? "secondary.light" : "primary.light",
+            type === "recipient" ? "secondary.light" : "primary.light",
         }}
       >
         <Typography variant="body1" sx={{ color: "common.black" }}>

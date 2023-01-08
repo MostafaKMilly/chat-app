@@ -1,4 +1,4 @@
-import { Suspense } from "react";
+import { useState } from "react";
 import {
   Drawer,
   IconButton,
@@ -6,18 +6,22 @@ import {
   Theme,
   useMediaQuery,
   Typography,
+  Button,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { Await, useLoaderData, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { TextField } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { LoadingSpinner } from "../../../../shared/components";
 import { ChatsList } from "./components";
+import { useChats } from "./hooks/useChats";
+import AddChatDialog from "./components/AddChatDialog";
 
 export const AppDrawer = ({ open, toggleDrawer }: AppDrawerProps) => {
-  const data = useLoaderData() as Record<string, any>;
+  const [phoneNumber, setPhoneNumber] = useState<string>();
+  const { chats } = useChats(phoneNumber);
   const matches = useMediaQuery<Theme>((theme) => theme.breakpoints.up("sm"));
   const navigate = useNavigate();
+  const [openDialog, setOpenDialog] = useState(false);
 
   const toLink = (chatId: number) => {
     navigate(`/chats/${chatId}`);
@@ -55,19 +59,20 @@ export const AppDrawer = ({ open, toggleDrawer }: AppDrawerProps) => {
         <TextField
           type="search"
           placeholder="Search for number ..."
+          value={phoneNumber}
           InputProps={{
             startAdornment: <SearchIcon sx={{ mr: 1, color: "grey.400" }} />,
           }}
+          onChange={(e) => setPhoneNumber(e.target.value)}
         />
       </DrawerHeader>
-      <Suspense fallback={<LoadingSpinner />}>
-        <Await
-          resolve={data?.chats}
-          errorElement={<Typography>Error on loading chats</Typography>}
-        >
-          <ChatsList toLink={toLink} />
-        </Await>
-      </Suspense>
+      <ChatsList toLink={toLink} chats={chats} />
+      {!chats.length && (
+        <Button sx={{ mx: 2 }} onClick={() => setOpenDialog(true)}>
+          Add new Chat
+        </Button>
+      )}
+      <AddChatDialog open={openDialog} onClose={() => setOpenDialog(false)} />
     </Drawer>
   );
 };

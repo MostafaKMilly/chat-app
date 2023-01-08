@@ -15,7 +15,6 @@ async function handleCreateChat(payload: { recipientId: number }) {
 
   const newChat = await prisma.chat.create({
     data: {
-      messages: [] as Prisma.chatCreateInput["messages"],
       users: {
         createMany: {
           data: [
@@ -29,7 +28,18 @@ async function handleCreateChat(payload: { recipientId: number }) {
         },
       },
     },
+    select: {
+      users: {
+        where: {
+          userId: payload.recipientId,
+        },
+        include: {
+          user: true,
+        },
+      },
+    },
   });
+  socket.join(newChat.users[0].chatId.toString());
   socket.emit("chatList", newChat);
 }
 

@@ -1,44 +1,48 @@
-import { Box, InputBase, Button, Typography } from "@mui/material";
+import { Box, InputBase, Button } from "@mui/material";
 import { Message } from "./Message";
 import EditIcon from "@mui/icons-material/Edit";
-import {
-  Await,
-  defer,
-  LoaderFunctionArgs,
-  useLoaderData,
-  useNavigate,
-} from "react-router-dom";
+import { LoaderFunctionArgs, useNavigate } from "react-router-dom";
 import { QueryClient } from "@tanstack/react-query";
 import API from "../../../../../api/httpClient";
-import { Suspense } from "react";
-import { LoadingSpinner } from "../../../../../shared/components";
-import { Messages } from "../types/messages.types";
+import { useEffect, useRef } from "react";
 import { useAuthenticatedUser } from "../../../../../shared/hooks";
+import classes from "./styles.module.css";
+import { useMessages } from "../hooks/useMessages";
 
 const getMessagesQuery = (chatId: number) => ({
   queryKey: ["messages", chatId],
-  queryFn: () => API.get("/messages", undefined, { data: { chatId } }),
+  queryFn: () => API.post("/messages", { chatId }, (res) => res),
 });
 
-const loader =
+export const loader =
   (client: QueryClient) =>
   async ({ params }: LoaderFunctionArgs) => {
     const chatId = Number(params.chatId);
     const messages =
       client.getQueryData(getMessagesQuery(chatId).queryKey) ??
-      client.fetchQuery(getMessagesQuery(chatId));
+      (await client.fetchQuery(getMessagesQuery(chatId)));
 
-    return defer({ messages });
+    return { messages };
   };
 
 export const Chat = () => {
-  const data = useLoaderData() as Record<string, any>;
+  const chatBoxRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const { user } = useAuthenticatedUser();
+  const { messages, handleSendMessage } = useMessages();
 
   const handleLeaveChat = () => {
     navigate("/");
   };
+
+  useEffect(() => {
+    if (chatBoxRef?.current) {
+      const scrollHeight = chatBoxRef.current.scrollHeight;
+      const height = chatBoxRef.current.clientHeight;
+      const maxScrollTop = scrollHeight - height;
+      chatBoxRef.current.scrollTop = maxScrollTop > 0 ? maxScrollTop : 0;
+    }
+  }, []);
 
   return (
     <Box height="100%" width="100%" position="relative">
@@ -51,25 +55,16 @@ export const Chat = () => {
         overflow="scroll"
         px={4}
         py={1}
+        ref={chatBoxRef}
+        className={classes.chatBox}
       >
-        <Suspense fallback={<LoadingSpinner />}>
-          <Await
-            resolve={data.messages}
-            errorElement={<Typography>Can not load messages</Typography>}
-          >
-            {({ data: messages }: { data: Messages }) => (
-              <>
-                {messages.map((message) => (
-                  <Message
-                    key={message.id}
-                    content={message.content}
-                    type={user?.id === message.userId ? "sender" : "recipient"}
-                  />
-                ))}
-              </>
-            )}
-          </Await>
-        </Suspense>
+        {messages.map((message) => (
+          <Message
+            key={message.id}
+            content={message.content}
+            type={user?.id === message.userId ? "recipient" : "sender"}
+          />
+        ))}
       </Box>
       <Box
         position="absolute"
@@ -86,6 +81,7 @@ export const Chat = () => {
           placeholder="Type a message"
           fullWidth
           startAdornment={<EditIcon sx={{ color: "lightgray", mr: 1 }} />}
+          onKeyDown={handleSendMessage}
         />
         <Button variant="contained" color="error" onClick={handleLeaveChat}>
           Leave

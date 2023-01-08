@@ -6,7 +6,9 @@
   ],
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
+    "@types/crypto-js": "^4.1.1",
     "@types/express-jwt": "^7.4.2",
+    "@types/randombytes": "^2.0.0",
     "express-jwt": "^8.2.1",
     "lerna": "^6.3.0"
   },
@@ -14,5 +16,16 @@
     "dev": "lerna run dev",
     "publish": "lerna run version",
     "test": "lerna run test"
+  },
+  "dependencies": {
+    "crypto": "^1.0.1",
+    "crypto-js": "^4.1.1",
+    "jsencrypt": "^3.3.1",
+    "node-jsencrypt": "^1.0.0",
+    "node-mac-crypt": "^1.0.0",
+    "node-rsa": "^1.1.1",
+    "nodejs-jsencrypt": "^3.0.0-rc.1",
+    "openpgp": "^5.5.0",
+    "randombytes": "^2.1.0"
   }
 }

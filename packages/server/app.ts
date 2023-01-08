@@ -2,13 +2,17 @@ import express, { NextFunction, Request, Response } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import bodyParser from "body-parser";
-import http from "http";
+import https from "https";
 import routes from "./routes/routes";
 import { HttpException } from "./utils";
 import { Server } from "socket.io";
 import chatsHandlers from "./handlers/chatsHandlers";
 import messagesHandlers from "./handlers/messagesHandlers";
 import socketVerficationMiddleware from "./middlewares/socket.middleware";
+import { receiveSessionKeyHandler } from "./handlers/sessionsHandler";
+import { getKeys } from "./utils/encryption/pgp";
+import path from "path";
+import fs from "fs";
 
 const { handleCreateChat } = chatsHandlers;
 const { receiveMessageHandler } = messagesHandlers;
@@ -27,7 +31,11 @@ app.use(routes);
 /**
  * Server Configuration
  */
-const httpServer = http.createServer(app);
+const options = {
+  key: fs.readFileSync(path.join(__dirname, "cert", "key.pem")),
+  cert: fs.readFileSync(path.join(__dirname, "cert", "cert.pem")),
+};
+const httpServer = https.createServer(options, app);
 const port = process.env.PORT;
 const socketIO = new Server(httpServer, {
   cors: {
@@ -35,14 +43,26 @@ const socketIO = new Server(httpServer, {
   },
 });
 
+const keys = getKeys();
+
 /**
  * Socket middlware
  */
 socketIO.use(socketVerficationMiddleware);
 
 socketIO.on("connection", (socket) => {
+  if (socket.handshake.auth.chatId) {
+    socket.join(String(socket.handshake.auth.chatId));
+  }
   socket.on("createChat", handleCreateChat.bind(socket));
-  socket.on("send message", receiveMessageHandler.bind(socket));
+  socket.on(
+    "send message",
+    receiveMessageHandler.bind({ socket, io: socketIO })
+  );
+
+  socket.emit("getPublicKey", keys.publicKey);
+
+  socket.on("sendSessionKey", receiveSessionKeyHandler.bind(socket));
 });
 
 app.get("/", (req, res) => {

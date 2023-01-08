@@ -5,7 +5,7 @@ import { getUserInfo } from "../shared/utils";
 export const AuthContext = createContext<{
   user: AuthenticatedUser | null;
   handleSignout: () => void;
-}>({ user: null, handleSignout: () => {} });
+}>({ user: null, handleSignout: () => {} }); 
 
 export const AuthProvider = ({
   children,
