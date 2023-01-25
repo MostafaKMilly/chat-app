@@ -11,8 +11,7 @@ import messagesHandlers from "./handlers/messagesHandlers";
 import socketVerficationMiddleware from "./middlewares/socket.middleware";
 import { receiveSessionKeyHandler } from "./handlers/sessionsHandler";
 import { getKeys } from "./utils/encryption/pgp";
-import path from "path";
-import fs from "fs";
+import options from "./cert"
 
 const { handleCreateChat } = chatsHandlers;
 const { receiveMessageHandler } = messagesHandlers;
@@ -31,10 +30,7 @@ app.use(routes);
 /**
  * Server Configuration
  */
-const options = {
-  key: fs.readFileSync(path.join(__dirname, "cert", "key.pem")),
-  cert: fs.readFileSync(path.join(__dirname, "cert", "cert.pem")),
-};
+
 const httpServer = https.createServer(options, app);
 const port = process.env.PORT;
 const socketIO = new Server(httpServer, {
@@ -97,5 +93,5 @@ app.use(
 );
 
 httpServer.listen(port, () => {
-  console.log(`[server]: Server is running at http://localhost:${port}`);
+  console.log(`[server]: Server is running at https://localhost:${port}`);
 });
